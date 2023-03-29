@@ -18,7 +18,7 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register(RegisterModel model)
+        public async Task<ActionResult> Register([FromForm, FromBody] RegisterModel model)
         {
             var result = await _userRepository.Register(model);
 
@@ -29,7 +29,7 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpPost("register-admin")]
-        public async Task<ActionResult> RegisterAdmin(RegisterModel model)
+        public async Task<ActionResult> RegisterAdmin([FromForm, FromBody] RegisterModel model)
         {
             var result = await _userRepository.RegisterAdmin(model);
 
@@ -40,7 +40,7 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login(LoginModel model)
+        public async Task<ActionResult> Login([FromForm, FromBody]LoginModel model)
         {
             var result = await _userRepository.Login(model);
 
