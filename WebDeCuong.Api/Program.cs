@@ -73,7 +73,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Add Services
-builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
