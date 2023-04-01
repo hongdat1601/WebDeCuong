@@ -17,6 +17,7 @@ namespace WebDeCuong.Api.Controllers
             _userRepository = userRepository;
         }
 
+
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromForm, FromBody] RegisterModel model)
         {
@@ -48,6 +49,50 @@ namespace WebDeCuong.Api.Controllers
                 return BadRequest(result);
 
             return Ok(result);
+        }
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                return Ok(_userRepository.GetAllUser());
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpGet("Id")]
+        public IActionResult GetUserById(string id)
+        {
+            try
+            {
+                var data = _userRepository.GetById(id);
+                if (data!= null)
+                {
+                    return Ok(data);
+                }
+                else
+                {
+                    return NotFound();
+                }    
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpPost]
+        public IActionResult AddUser(UserModel user)
+        {
+            try
+            {
+                return Ok(_userRepository.AddUser(user));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

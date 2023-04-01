@@ -43,7 +43,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // Add EF Core DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("test")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("test1")));
 
 // Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
