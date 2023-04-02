@@ -9,7 +9,9 @@ namespace WebDeCuong.Api.Repositories.Interfaces
         Task<ResponseModel> RegisterAdmin(RegisterModel model);
         Task<ResponseModel> Login(LoginModel model);
         List<UserModel> GetAllUser();
-        UserModel GetById(string id);
-        UserModel AddUser(UserModel user);
+        UserModel GetById(string email);
+        Task<ResponseModel> AddUser(UserModel user);
+        Task<ResponseModel> UpdateUser(UserModel user);
+        Task<ResponseModel> DeleteUser(string email);
     }
 }

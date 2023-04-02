@@ -162,21 +162,11 @@ namespace WebDeCuong.Api.Repositories
         public List<UserModel> GetAllUser()
         {
             var users = _userManager.Users.Select(user => new UserModel
-            {   ID = user.Id,
+            {   
                 Username = user.UserName,
-                NormalizedUsername = user.NormalizedUserName,
+               
                 Email = user.Email,
-                NormalizedEmail = user.NormalizedEmail,
-                EmailConfirmed = user.EmailConfirmed,
-                PassWordHash = user.PasswordHash,
-                SecurityStamp = user.SecurityStamp,
-                ConcurencyStamp = user.ConcurrencyStamp,
                 PhoneNumber = user.PhoneNumber,
-                PhoneNumberConfirm = user.PhoneNumberConfirmed,
-                TwoFactorEnable = user.TwoFactorEnabled,
-                
-                LockoutEndEnable = user.LockoutEnabled,
-                AccessFailCount = user.AccessFailedCount,
                 Avatar = user.Avatar,
                 Faculty = user.Faculty,
                 FullName = user.FullName
@@ -184,28 +174,16 @@ namespace WebDeCuong.Api.Repositories
             });
             return users.ToList();
         }
-        public UserModel GetById(string id)
+        public UserModel GetById(string email)
         {
-            var user = _userManager.Users.SingleOrDefault(user => user.Id == id);
+            var user = _userManager.Users.SingleOrDefault(user => user.Email == email);
             if (user !=null)
             {
                 return new UserModel
                 {
-                    ID = user.Id,
                     Username = user.UserName,
-                    NormalizedUsername = user.NormalizedUserName,
                     Email = user.Email,
-                    NormalizedEmail = user.NormalizedEmail,
-                    EmailConfirmed = user.EmailConfirmed,
-                    PassWordHash = user.PasswordHash,
-                    SecurityStamp = user.SecurityStamp,
-                    ConcurencyStamp = user.ConcurrencyStamp,
                     PhoneNumber = user.PhoneNumber,
-                    PhoneNumberConfirm = user.PhoneNumberConfirmed,
-                    TwoFactorEnable = user.TwoFactorEnabled,
-
-                    LockoutEndEnable = user.LockoutEnabled,
-                    AccessFailCount = user.AccessFailedCount,
                     Avatar = user.Avatar,
                     Faculty = user.Faculty,
                     FullName = user.FullName
@@ -213,57 +191,86 @@ namespace WebDeCuong.Api.Repositories
             }
             return null;
         }
-        public UserModel AddUser(UserModel user)
+        public async Task<ResponseModel> AddUser(UserModel user)
         {
+            var responseModel = new ResponseModel();
             var _user = new ApplicationUser
             {
-                Id = user.ID,
-                UserName = user.Username,
-                NormalizedUserName = user.NormalizedUsername,
+                UserName = user.Email,
                 Email = user.Email,
-                NormalizedEmail = user.NormalizedEmail,
-                EmailConfirmed = user.EmailConfirmed,
-                SecurityStamp = user.SecurityStamp,
-                ConcurrencyStamp = user.ConcurencyStamp,
+                SecurityStamp = Guid.NewGuid().ToString(),
                 PhoneNumber = user.PhoneNumber,
-                PhoneNumberConfirmed = user.PhoneNumberConfirm,
-                TwoFactorEnabled = user.TwoFactorEnable,
-                LockoutEnd = user.LockoutEnd,
-                LockoutEnabled = user.LockoutEndEnable,
-                AccessFailedCount = user.AccessFailCount,
                 Avatar = user.Avatar,
                 Faculty = user.Faculty,
                 FullName = user.FullName
 
             };
-            var result = _userManager.CreateAsync(_user, "123456");
-
-   
-
-            _roleManager.CreateAsync(new IdentityRole("User"));
-
-            _userManager.AddToRoleAsync(_user, "User");
-            
-
-            return new UserModel
+            var result = await _userManager.CreateAsync(_user, "123456aA@");
+            if (!result.Succeeded)
             {
-                ID = _user.Id,
-                Username = _user.UserName,
-                NormalizedUsername = _user.NormalizedUserName,
-                Email = _user.Email,
-                NormalizedEmail = _user.NormalizedEmail,
-                EmailConfirmed = _user.EmailConfirmed,
-                SecurityStamp = _user.SecurityStamp,
-                ConcurencyStamp = _user.ConcurrencyStamp,
-                PhoneNumber = _user.PhoneNumber,
-                PhoneNumberConfirm = _user.PhoneNumberConfirmed,
-                TwoFactorEnable = _user.TwoFactorEnabled,
-                LockoutEndEnable = _user.LockoutEnabled,
-                AccessFailCount = _user.AccessFailedCount,
-                Avatar = _user.Avatar,
-                Faculty = _user.Faculty,
-                FullName = _user.FullName
-            };
+                responseModel.Status = Status.Error;
+                responseModel.Message = "";
+                return responseModel;
+            }
+            await _roleManager.CreateAsync(new IdentityRole("User"));
+            await _userManager.AddToRoleAsync(_user, "User");
+            responseModel.Status = Status.Success;
+            responseModel.Message = "User created successfully.";
+
+            return responseModel;
+
+        }
+        public async Task<ResponseModel> UpdateUser(UserModel user)
+        {
+            var responseModel = new ResponseModel();
+            var _user = _userManager.Users.SingleOrDefault(_user => _user.Email == user.Email);
+            if (_user != null)
+            {
+                _user.UserName = user.Username;
+                _user.PhoneNumber = user.PhoneNumber;
+                _user.Avatar = user.Avatar;
+                _user.Faculty = user.Faculty;
+                _user.FullName = user.FullName;
+                var result = await _userManager.UpdateAsync(_user);
+                if (!result.Succeeded)
+                {
+                    responseModel.Status = Status.Error;
+                    responseModel.Message = "";
+                    return responseModel;
+                }
+                responseModel.Status = Status.Success;
+                responseModel.Message = "User Update successfully.";
+                return responseModel;
+
+
+            }
+            responseModel.Status = Status.Error;
+            responseModel.Message = "Not Found User";
+            return responseModel;
+
+
+
+        }
+        public async Task<ResponseModel> DeleteUser(string email)
+        {
+            var responseModel = new ResponseModel();
+            var _user = _userManager.Users.SingleOrDefault(_user => _user.Email == email);
+            if(_user != null)
+            {
+                var result = await _userManager.DeleteAsync(_user);
+                if (!result.Succeeded)
+                {
+                    responseModel.Status = Status.Error;
+                    responseModel.Message = "";
+                    return responseModel;
+                }
+                responseModel.Status = Status.Success;
+                responseModel.Message = "User Delete successfully.";
+                return responseModel;
+            }
+            responseModel.Status = Status.Success;
+            responseModel.Message = "User Not Found.";
+            return responseModel;
         }
        
     }
