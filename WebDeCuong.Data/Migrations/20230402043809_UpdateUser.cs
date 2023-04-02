@@ -5,7 +5,7 @@
 namespace WebDeCuong.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Update_user : Migration
+    public partial class UpdateUser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

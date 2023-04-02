@@ -12,8 +12,8 @@ using WebDeCuong.Data;
 namespace WebDeCuong.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230331093512_Update_user")]
-    partial class Update_user
+    [Migration("20230402043809_UpdateUser")]
+    partial class UpdateUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
