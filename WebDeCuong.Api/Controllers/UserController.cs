@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WebDeCuong.Api.Cons;
 using WebDeCuong.Api.Models;
@@ -16,5 +17,69 @@ namespace WebDeCuong.Api.Controllers
         {
             _userRepository = userRepository;
         }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                return Ok(_userRepository.GetAllUser());
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpGet("{email}")]
+        public IActionResult GetUserById(string email)
+        {
+            try
+            {
+                var data = _userRepository.GetById(email);
+                if (data!= null)
+                {
+                    return Ok(data);
+                }
+                else
+                {
+                    return NotFound();
+                }    
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpPost]
+        public async Task<ActionResult> AddUser([FromForm, FromBody]UserModel user)
+        {
+            var result = await _userRepository.AddUser(user);
+
+            if (result.Status.CompareTo(Status.Error) == 0)
+                return BadRequest(result);
+            return Ok(result);
+        }
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser(UserModel user)
+        {
+            var result = await _userRepository.UpdateUser(user);
+            if(result.Status.CompareTo(Status.Error) == 0)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+        [HttpDelete("{email}")]
+        public async Task<IActionResult> DeleteUser(string email)
+        {
+            var result = await _userRepository.DeleteUser(email);
+            if(result.Status.CompareTo(Status.Error) == 0)
+            {
+                return BadRequest(result);
+
+            }
+            return Ok(result);
+        }
+            
     }
 }
