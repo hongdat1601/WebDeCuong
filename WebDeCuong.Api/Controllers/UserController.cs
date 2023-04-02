@@ -18,39 +18,6 @@ namespace WebDeCuong.Api.Controllers
             _userRepository = userRepository;
         }
 
-
-        [HttpPost("register")]
-        public async Task<ActionResult> Register([FromForm, FromBody] RegisterModel model)
-        {
-            var result = await _userRepository.Register(model);
-
-            if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
-
-        [HttpPost("register-admin")]
-        public async Task<ActionResult> RegisterAdmin([FromForm, FromBody] RegisterModel model)
-        {
-            var result = await _userRepository.RegisterAdmin(model);
-
-            if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
-
-        [HttpPost("login")]
-        public async Task<ActionResult> Login([FromForm, FromBody]LoginModel model)
-        {
-            var result = await _userRepository.Login(model);
-
-            if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -63,7 +30,7 @@ namespace WebDeCuong.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpGet("Id")]
+        [HttpGet("{email}")]
         public IActionResult GetUserById(string email)
         {
             try
@@ -102,7 +69,7 @@ namespace WebDeCuong.Api.Controllers
             }
             return Ok(result);
         }
-        [HttpDelete("email")]
+        [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteUser(string email)
         {
             var result = await _userRepository.DeleteUser(email);

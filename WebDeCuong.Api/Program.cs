@@ -72,8 +72,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add Services
+// Add Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 var app = builder.Build();
 
