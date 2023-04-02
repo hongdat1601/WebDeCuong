@@ -16,38 +16,5 @@ namespace WebDeCuong.Api.Controllers
         {
             _userRepository = userRepository;
         }
-
-        [HttpPost("register")]
-        public async Task<ActionResult> Register([FromForm, FromBody] RegisterModel model)
-        {
-            var result = await _userRepository.Register(model);
-
-            if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
-
-        [HttpPost("register-admin")]
-        public async Task<ActionResult> RegisterAdmin([FromForm, FromBody] RegisterModel model)
-        {
-            var result = await _userRepository.RegisterAdmin(model);
-
-            if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
-
-        [HttpPost("login")]
-        public async Task<ActionResult> Login([FromForm, FromBody]LoginModel model)
-        {
-            var result = await _userRepository.Login(model);
-
-            if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
-
-            return Ok(result);
-        }
     }
 }
