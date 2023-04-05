@@ -76,8 +76,16 @@ namespace WebDeCuong.Api.Controllers
             if(result.Status.CompareTo(Status.Error) == 0)
             {
                 return BadRequest(result);
-
             }
+            return Ok(result);
+        }
+
+        [HttpGet("getCurrentUserInfo")]
+        public async Task<IActionResult> GetCurrentUserInfo()
+        {
+            var result = await _userRepository.GetCurrentUserInfo();
+            if (result.Status.CompareTo(Status.Error) == 0)
+                return BadRequest(result);
             return Ok(result);
         }
             

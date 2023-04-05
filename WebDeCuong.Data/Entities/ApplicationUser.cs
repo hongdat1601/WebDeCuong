@@ -9,9 +9,15 @@ namespace WebDeCuong.Data.Entities
         public string FullName { get; set; } = string.Empty;
 
         [Required]
-        public string Avatar { get; set; } = string.Empty;
+        public string Faculty { get; set; } = string.Empty;
 
         [Required]
-        public string Faculty { get; set; } = string.Empty;
+        public DateTime DateOfBirth { get; set; }
+
+        [Required]
+        public bool Gender { get; set; }
+
+        [Required]
+        public string PlaceOfBirth { get; set; } = String.Empty;
     }
 }
