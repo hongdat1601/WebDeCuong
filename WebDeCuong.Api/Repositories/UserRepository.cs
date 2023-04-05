@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using WebDeCuong.Api.Cons;
@@ -17,15 +18,18 @@ namespace WebDeCuong.Api.Repositories
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _contextAccessor;
 
         public UserRepository(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IHttpContextAccessor contextAccessor)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _contextAccessor = contextAccessor;
         }
 
         public List<UserModel> GetAllUser()
@@ -36,7 +40,6 @@ namespace WebDeCuong.Api.Repositories
                
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                Avatar = user.Avatar,
                 Faculty = user.Faculty,
                 FullName = user.FullName
 
@@ -53,9 +56,11 @@ namespace WebDeCuong.Api.Repositories
                     Username = user.UserName,
                     Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
-                    Avatar = user.Avatar,
                     Faculty = user.Faculty,
-                    FullName = user.FullName
+                    FullName = user.FullName,
+                    DateOfBirth = user.DateOfBirth,
+                    Gender = user.Gender,
+                    PlaceOfBirth = user.PlaceOfBirth
                 };
             }
             return null;
@@ -69,9 +74,11 @@ namespace WebDeCuong.Api.Repositories
                 Email = user.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 PhoneNumber = user.PhoneNumber,
-                Avatar = user.Avatar,
                 Faculty = user.Faculty,
-                FullName = user.FullName
+                FullName = user.FullName,
+                DateOfBirth = user.DateOfBirth,
+                Gender = user.Gender,
+                PlaceOfBirth = user.PlaceOfBirth
 
             };
             var result = await _userManager.CreateAsync(_user, "123456aA@");
@@ -97,9 +104,11 @@ namespace WebDeCuong.Api.Repositories
             {
                 _user.UserName = user.Username;
                 _user.PhoneNumber = user.PhoneNumber;
-                _user.Avatar = user.Avatar;
                 _user.Faculty = user.Faculty;
                 _user.FullName = user.FullName;
+                _user.DateOfBirth = user.DateOfBirth;
+                _user.Gender = user.Gender;
+                _user.PlaceOfBirth = user.PlaceOfBirth;
                 var result = await _userManager.UpdateAsync(_user);
                 if (!result.Succeeded)
                 {
@@ -141,6 +150,40 @@ namespace WebDeCuong.Api.Repositories
             responseModel.Message = "User Not Found.";
             return responseModel;
         }
-       
+
+        public async Task<ResponseModel> GetCurrentUserInfo()
+        {
+            var responseModel = new ResponseModel();
+
+            var email = _contextAccessor.HttpContext!.User.Claims
+                .FirstOrDefault(c => c.Type.CompareTo(ClaimTypes.Email) == 0);
+
+            if (email == null)
+            {
+                responseModel.Status = Status.Error;
+                responseModel.Message = "Token not accepted.";
+                return responseModel;
+            }
+
+            var user = await _userManager.FindByNameAsync(email.Value);
+            if (user == null)
+            {
+                responseModel.Status = Status.Error;
+                responseModel.Message = "User not found.";
+                return responseModel;
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            responseModel.Status = Status.Success;
+            responseModel.Result = new
+            {
+                Email = user.Email,
+                FullName = user.FullName,
+                Roles = roles[0]
+            };
+
+            return responseModel;
+        }
     }
 }

@@ -10,5 +10,7 @@ namespace WebDeCuong.Api.Repositories.Interfaces
         Task<ResponseModel> AddUser(UserModel user);
         Task<ResponseModel> UpdateUser(UserModel user);
         Task<ResponseModel> DeleteUser(string email);
+
+        Task<ResponseModel> GetCurrentUserInfo();
     }
 }

@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebDeCuong.Api.Cons;
 using WebDeCuong.Api.Models;
-using WebDeCuong.Api.Repositories;
 using WebDeCuong.Api.Repositories.Interfaces;
 
 namespace WebDeCuong.Api.Controllers
@@ -19,23 +17,23 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpPost("register-admin")]
-        public async Task<ActionResult> RegisterAdmin([FromForm] RegisterModel model)
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
             var result = await _authRepository.RegisterAdmin(model);
 
             if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
+                return BadRequest(result.Message);
 
             return Ok(result);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             var result = await _authRepository.Login(model);
 
             if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
+                return BadRequest(result.Message);
 
             return Ok(result);
         }
