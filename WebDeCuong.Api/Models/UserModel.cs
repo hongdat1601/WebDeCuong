@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using WebDeCuong.Data.Entities;
 
 namespace WebDeCuong.Api.Models
 {
@@ -12,7 +13,8 @@ namespace WebDeCuong.Api.Models
 		public string FullName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool Gender { get; set; }
-        public string PlaceOfBirth { get; set; } 
+        public string PlaceOfBirth { get; set; }
+       
     }
 }
 

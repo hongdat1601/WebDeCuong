@@ -18,6 +18,8 @@ namespace WebDeCuong.Data.Entities
         public bool Gender { get; set; }
 
         [Required]
-        public string PlaceOfBirth { get; set; } = String.Empty;
+        public string PlaceOfBirth { get; set; } = string.Empty;
+
+        public ICollection<SubjectUser> SubjectUsers { get; set; } = null!;
     }
 }

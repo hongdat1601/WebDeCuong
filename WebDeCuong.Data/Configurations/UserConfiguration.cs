@@ -9,6 +9,10 @@ namespace WebDeCuong.Data.Configurations
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             builder.ToTable("Users");
+
+            builder.HasMany(u => u.SubjectUsers)
+                .WithOne(su => su.User)
+                .HasForeignKey(su => su.UserId);
         }
     }
 }

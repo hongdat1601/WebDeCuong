@@ -76,7 +76,7 @@ builder.Services.AddAuthentication(options =>
 // Add Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-
+builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 // Add Services
 builder.Services.AddHttpContextAccessor();
 

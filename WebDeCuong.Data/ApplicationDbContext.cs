@@ -12,11 +12,19 @@ namespace WebDeCuong.Data
             
         }
 
+        public DbSet<Subject> Subjects => Set<Subject>();
+        public DbSet<Evaluate> Evaluates => Set<Evaluate>();
+        public DbSet<SubjectContent> SubjectContents => Set<SubjectContent>();
+        public DbSet<EvalElement> EvalElements => Set<EvalElement>();
+        public DbSet<SubjectUser> SubjectUsers => Set<SubjectUser>();
+        public DbSet<SubjectOutputStandard> SubjectOutputStandards => Set<SubjectOutputStandard>();
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new SubjectConfiguration());
         }
     }
 }
