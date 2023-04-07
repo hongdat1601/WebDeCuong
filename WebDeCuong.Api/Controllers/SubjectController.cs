@@ -51,6 +51,7 @@ namespace WebDeCuong.Api.Controllers
             return Ok(result);
 
         }
+
         [HttpGet("{id}")]
         public IActionResult GetSubjectById(int id)
         {
@@ -78,6 +79,7 @@ namespace WebDeCuong.Api.Controllers
                 return BadRequest(result);
             return Ok(result);
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubject(int id)
         {

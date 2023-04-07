@@ -25,7 +25,7 @@ namespace WebDeCuong.Api.Repositories
 
         public List<SubjectModel> GetAllSubject()
         {
-            var subject = _context.Subjects.Include(x => x.SubjectUsers).ToList();
+            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).ToList();
             var subjectModels = subject.Select(s => new SubjectModel
             {
 
@@ -40,8 +40,12 @@ namespace WebDeCuong.Api.Repositories
                 B = s.B,
                 C = s.C,
                 Other = s.Other,
-                UserId = s.SubjectUsers.Select(u => u.UserId).ToList()
-            });
+                UserId = s.SubjectUsers.Select(u => u.UserId).ToList(),
+                CloName = s.SubjectOutputStandards.Select(u => u.CloName).ToList(),
+                Content = s.SubjectOutputStandards.Select(u => u.Content).ToList(),
+                SoPerPi = s.SubjectOutputStandards.Select(u => u.SoPerPi).ToList(),
+                
+            }) ;
 
             return subjectModels.ToList();
         }
@@ -84,7 +88,6 @@ namespace WebDeCuong.Api.Repositories
                 return responseModel;
 
             }
-           
 
             foreach (var userId in subject.UserId)
             {
@@ -95,6 +98,17 @@ namespace WebDeCuong.Api.Repositories
                 };
                 await _context.SubjectUsers.AddAsync(subjectUser);
             }
+            foreach (var cloname in subject.CloName)
+            {
+                var subjectoutput = new SubjectOutputStandard
+                {
+                    CloName = cloname,
+                    Content = subject.Content[subject.CloName.IndexOf(cloname)],
+                    SoPerPi = subject.SoPerPi[subject.CloName.IndexOf(cloname)],
+                    SubjectId = _subject.Id
+                };
+                await _context.SubjectOutputStandards.AddAsync(subjectoutput);
+            }
             await _context.SaveChangesAsync();
             responseModel.Status = Status.Success;
             responseModel.Message = "Subject create succesfully";
@@ -104,7 +118,7 @@ namespace WebDeCuong.Api.Repositories
 
         public SubjectModel GetById(int id)
         {
-            var subject = _context.Subjects.Include(x => x.SubjectUsers).SingleOrDefault(x=> x.Id == id);
+            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x=>x.SubjectOutputStandards).SingleOrDefault(x=> x.Id == id);
             if (subject != null)
             {
                 return new SubjectModel
@@ -121,7 +135,10 @@ namespace WebDeCuong.Api.Repositories
                     B = subject.B,
                     C = subject.C,
                     Other = subject.Other,
-                    UserId = subject.SubjectUsers.Select(u => u.UserId).ToList()
+                    UserId = subject.SubjectUsers.Select(u => u.UserId).ToList(),
+                    CloName = subject.SubjectOutputStandards.Select(u => u.CloName).ToList(),
+                    Content = subject.SubjectOutputStandards.Select(u => u.Content).ToList(),
+                    SoPerPi = subject.SubjectOutputStandards.Select(u => u.SoPerPi).ToList()
                 };
             }
             return null;
@@ -141,7 +158,7 @@ namespace WebDeCuong.Api.Repositories
                     return responseModel;
                 }
             }
-            var _subject = _context.Subjects.Include(x => x.SubjectUsers).SingleOrDefault(x => x.Id == id);
+            var _subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).SingleOrDefault(x => x.Id == id);
             if (_subject != null)
             {
                 _subject.Name = subject.Name;
@@ -155,11 +172,27 @@ namespace WebDeCuong.Api.Repositories
                 _subject.B = subject.B;
                 _subject.C = subject.C;
                 _subject.Other = subject.Other;
-                
-                var _subjectuser = _context.SubjectUsers.SingleOrDefault(x => x.Id == _subject.Id);
+                _subject.SubjectUsers.Clear();
                 foreach (var userId in subject.UserId)
                 {
-                    _subjectuser.UserId = userId;
+                    var subjectuser = new SubjectUser
+                    {
+                        UserId = userId,  
+                        SubjectId = _subject.Id
+                    };
+                    await _context.SubjectUsers.AddAsync(subjectuser);
+                }
+                _subject.SubjectOutputStandards.Clear();
+                foreach (var cloname in subject.CloName)
+                {
+                    var subjectoutput = new SubjectOutputStandard
+                    {
+                        CloName = cloname,
+                        Content = subject.Content[subject.CloName.IndexOf(cloname)],
+                        SoPerPi = subject.SoPerPi[subject.CloName.IndexOf(cloname)],
+                        SubjectId = _subject.Id
+                    };
+                    await _context.SubjectOutputStandards.AddAsync(subjectoutput);
                 }
                 await _context.SaveChangesAsync();
                 responseModel.Status = Status.Success;

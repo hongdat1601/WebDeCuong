@@ -31,6 +31,9 @@ namespace WebDeCuong.Api.Models
         public string? C { get; set; }
 
         public string? Other { get; set; }
+        public List<string> CloName { get; set; } 
+        public List<string> Content { get; set; } 
+        public List<string> SoPerPi { get; set; } 
         public List<string> UserId { get; set; } = null!;
     }
 }
