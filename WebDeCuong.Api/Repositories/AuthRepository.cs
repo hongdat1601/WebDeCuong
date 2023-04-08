@@ -105,7 +105,19 @@ namespace WebDeCuong.Api.Repositories
                 return responseModel;
             }
 
-            await _userManager.AddToRoleAsync(user, "Admin");
+            result = await _userManager.AddToRoleAsync(user, "Admin");
+
+            if (!result.Succeeded)
+            {
+                responseModel.Status = Status.Error;
+                responseModel.Message = "";
+
+                foreach (var error in result.Errors)
+                    responseModel.Message = responseModel.Message + error.Description + "\n";
+
+                return responseModel;
+            }
+
             responseModel.Status = Status.Success;
             responseModel.Message = "User created successfully.";
 

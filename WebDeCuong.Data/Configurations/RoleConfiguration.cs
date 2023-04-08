@@ -8,11 +8,21 @@ namespace WebDeCuong.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<IdentityRole> builder)
         {
-            builder.HasData(new List<IdentityRole>
-            {
-                new IdentityRole("User"),
-                new IdentityRole("Admin")
-            });
+            var roles = new List<IdentityRole>();
+
+            var userRole = new IdentityRole();
+            userRole.Id = Guid.NewGuid().ToString();
+            userRole.Name = "User";
+            userRole.NormalizedName = userRole.Name.ToUpper();
+            roles.Add(userRole);
+
+            var adminRole = new IdentityRole();
+            adminRole.Id = Guid.NewGuid().ToString();
+            adminRole.Name = "Admin";
+            adminRole.NormalizedName = adminRole.Name.ToUpper();
+            roles.Add(adminRole);
+
+            builder.HasData(roles);
         }
     }
 }
