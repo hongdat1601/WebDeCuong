@@ -46,11 +46,18 @@ namespace WebDeCuong.Api.Repositories
                 return responseModel;
             }
 
+            var roles = await _userManager.GetRolesAsync(userExists);
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, model.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var expires = DateTime.Now.AddDays(1);
 

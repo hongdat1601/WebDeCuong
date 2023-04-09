@@ -9,6 +9,7 @@ using WebDeCuong.Api.Repositories.Interfaces;
 namespace WebDeCuong.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UserController : ControllerBase
     {
