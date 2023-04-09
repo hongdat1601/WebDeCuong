@@ -107,7 +107,7 @@ namespace WebDeCuong.Api.Repositories
             user.PhoneNumber = model.Phone;
             user.PlaceOfBirth = model.PlaceOfBirth;
             user.Gender = model.Gender;
-            user.DateOfBirth = DateTime.ParseExact(model.DateOfBirth, "yyyy/MM/dd", null);
+            user.DateOfBirth = DateTime.Parse(model.DateOfBirth);
 
             var result = await _userManager.UpdateAsync(user);
 
