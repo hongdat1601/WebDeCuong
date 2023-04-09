@@ -12,8 +12,8 @@ using WebDeCuong.Data;
 namespace WebDeCuong.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230408123334_UpdateRoleSeedData")]
-    partial class UpdateRoleSeedData
+    [Migration("20230409084623_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +54,15 @@ namespace WebDeCuong.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e2987894-ad22-437a-94db-b68f43cb6827",
+                            Id = "3d8a544a-1200-4ab9-b9dd-c0ae810d5cd5",
+                            ConcurrencyStamp = "3d8a544a-1200-4ab9-b9dd-c0ae810d5cd5",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "0ed38d92-3009-45da-8bbf-a6473286be78",
+                            Id = "7564c202-054f-450c-93bf-3393bc948104",
+                            ConcurrencyStamp = "7564c202-054f-450c-93bf-3393bc948104",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -151,6 +153,18 @@ namespace WebDeCuong.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "874325af-233f-422c-817b-70521beb1e7b",
+                            RoleId = "7564c202-054f-450c-93bf-3393bc948104"
+                        },
+                        new
+                        {
+                            UserId = "b38f9215-217b-43fb-b7de-eb58904b87ce",
+                            RoleId = "3d8a544a-1200-4ab9-b9dd-c0ae810d5cd5"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -253,6 +267,52 @@ namespace WebDeCuong.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "b38f9215-217b-43fb-b7de-eb58904b87ce",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "3300c540-ed2b-4126-86c8-0425cbed2fba",
+                            DateOfBirth = new DateTime(2023, 4, 9, 15, 46, 23, 229, DateTimeKind.Local).AddTicks(8169),
+                            Email = "user@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Văn A",
+                            Gender = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER@GMAIL.COM",
+                            NormalizedUserName = "USER@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEExgG8x0IExxf99WGIiud/6E/A7L35y6HWoXEzOcvZa6mkK2M42zscdDuEwCHYiRrA==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "d69e3b9f-8801-4a20-968b-955b39b463c3",
+                            TwoFactorEnabled = false,
+                            UserName = "user@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "874325af-233f-422c-817b-70521beb1e7b",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8dc53f20-c74f-4d84-89cf-69fc0cc2c9d2",
+                            DateOfBirth = new DateTime(2023, 4, 9, 15, 46, 23, 99, DateTimeKind.Local).AddTicks(4785),
+                            Email = "admin@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Khoa học máy tính",
+                            FullName = "Nguyễn Văn A",
+                            Gender = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@GMAIL.COM",
+                            NormalizedUserName = "ADMIN@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEdNF7JDq94epuqN1gKj9VBhHQd+RHJwGdRcR1Qnd27YB0TnnuKjE/edPK48i/XiLw==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "48b82cdd-50e6-4712-bc71-db454a973bdf",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("WebDeCuong.Data.Entities.EvalElement", b =>

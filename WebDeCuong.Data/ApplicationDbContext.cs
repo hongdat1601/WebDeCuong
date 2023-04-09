@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebDeCuong.Data.Configurations;
 using WebDeCuong.Data.Entities;
+using WebDeCuong.Data.Extensions;
 
 namespace WebDeCuong.Data
 {
@@ -23,8 +25,10 @@ namespace WebDeCuong.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new SubjectConfiguration());
+
+            builder.SeedData();
         }
+
     }
 }

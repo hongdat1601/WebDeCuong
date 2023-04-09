@@ -51,13 +51,15 @@ namespace WebDeCuong.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e2987894-ad22-437a-94db-b68f43cb6827",
+                            Id = "182ca838-6f44-4186-9b42-279b31137dbc",
+                            ConcurrencyStamp = "182ca838-6f44-4186-9b42-279b31137dbc",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "0ed38d92-3009-45da-8bbf-a6473286be78",
+                            Id = "42d9b0e9-d61d-40cf-8f47-cacc8c93fff6",
+                            ConcurrencyStamp = "42d9b0e9-d61d-40cf-8f47-cacc8c93fff6",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -148,6 +150,18 @@ namespace WebDeCuong.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "61e3533f-2781-401c-8466-bb68f3717722",
+                            RoleId = "42d9b0e9-d61d-40cf-8f47-cacc8c93fff6"
+                        },
+                        new
+                        {
+                            UserId = "d7e8166d-a271-4f18-842d-4d2414d38680",
+                            RoleId = "182ca838-6f44-4186-9b42-279b31137dbc"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -250,6 +264,52 @@ namespace WebDeCuong.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "d7e8166d-a271-4f18-842d-4d2414d38680",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2ab3e23d-f580-45c5-b9cd-c86c5b99b03b",
+                            DateOfBirth = new DateTime(2023, 4, 9, 15, 48, 9, 534, DateTimeKind.Local).AddTicks(3844),
+                            Email = "user@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER@GMAIL.COM",
+                            NormalizedUserName = "USER@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAENUYD1uGzQlsJXx4sTixAA8ZSYMSfTARk4YlJStpPWStwXT4NT57JKn/c/rRm8p9hw==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "10d96167-7f61-43eb-b202-3d633352df2a",
+                            TwoFactorEnabled = false,
+                            UserName = "user@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "61e3533f-2781-401c-8466-bb68f3717722",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "fd36e069-f68b-4e83-8c89-60f2e9097fcf",
+                            DateOfBirth = new DateTime(2023, 4, 9, 15, 48, 9, 405, DateTimeKind.Local).AddTicks(3447),
+                            Email = "admin@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Khoa học máy tính",
+                            FullName = "Nguyễn Văn A",
+                            Gender = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@GMAIL.COM",
+                            NormalizedUserName = "ADMIN@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB2myNoeHIW5K/AZbmRl8evq/6IVePxv7WgjJ7GhqwwMoZxneHidPZZd4LrBmWCmsA==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "cb30ecd2-91fa-4f8c-92b6-cc0b2188d2e3",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("WebDeCuong.Data.Entities.EvalElement", b =>
