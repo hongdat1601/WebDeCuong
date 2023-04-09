@@ -36,11 +36,21 @@ namespace WebDeCuong.Api.Models
         public List<string> OutputContent { get; set; } 
         public List<string> SoPerPi { get; set; }
 
-        public List<string> DetailContent { get; set; } 
+        public List<string> Content { get; set; } 
         public List<int> NLessons { get; set; }
         public List<string> Clos { get; set; } 
         public List<string> Method { get; set; }
         public List<string>? Bonus { get; set; }
+
+        public List<string> EvaluateCloName { get; set; }
+        public List<string> Test { get; set; }
+        public List<string> EvaluateMethod { get; set; }
+        public List<float> EvalPropotion { get; set; }
+        public List<string> Target { get; set; }
+
+        public List<string> EvaluaElementName { get; set; }
+        public List<string> EvaluaElementMethod { get; set; }
+        public List<float> EvaluaElementPropotion { get; set; }
 
         public List<string> UserId { get; set; } = null!;
     }

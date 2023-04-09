@@ -25,7 +25,7 @@ namespace WebDeCuong.Api.Repositories
 
         public List<SubjectModel> GetAllSubject()
         {
-            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).Include(x =>x.SubjectContents).ToList();
+            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).Include(x =>x.SubjectContents).Include(x => x.Evaluates).Include(x => x.EvalElements).ToList();
             var subjectModels = subject.Select(s => new SubjectModel
             {
 
@@ -47,12 +47,22 @@ namespace WebDeCuong.Api.Repositories
                 OutputContent = s.SubjectOutputStandards.Select(u => u.Content).ToList(),
                 SoPerPi = s.SubjectOutputStandards.Select(u => u.SoPerPi).ToList(),
 
-                DetailContent = s.SubjectContents.Select(u => u.Content).ToList(),
+                Content = s.SubjectContents.Select(u => u.Content).ToList(),
                 Clos = s.SubjectContents.Select(u => u.Clos).ToList(),
                 NLessons = s.SubjectContents.Select(u => u.NLessons).ToList(),
                 Bonus = s.SubjectContents.Select(u => u.Bonus).ToList(),
-                Method = s.SubjectContents.Select(u=>u.Method).ToList()
-            });
+                Method = s.SubjectContents.Select(u => u.Method).ToList(),
+
+                EvaluateCloName = s.Evaluates.Select(u => u.CloName).ToList(),
+                EvalPropotion = s.Evaluates.Select(u=> u.Proportion).ToList(),
+                EvaluateMethod = s.Evaluates.Select(u => u.Method).ToList(),
+                Test = s.Evaluates.Select(u => u.Test).ToList(),
+                Target = s.Evaluates.Select( u=> u.Target).ToList(),
+
+                EvaluaElementName = s.EvalElements.Select(u => u.Name).ToList(),
+                EvaluaElementMethod = s.EvalElements.Select(u=> u.Method).ToList(),
+                EvaluaElementPropotion = s.EvalElements.Select(u => u.Proportion).ToList(),
+            }) ;
         
 
             return subjectModels.ToList();
@@ -117,19 +127,46 @@ namespace WebDeCuong.Api.Repositories
                 };
                 await _context.SubjectOutputStandards.AddAsync(subjectoutput);
             }
-            foreach (var content in subject.DetailContent)
+            foreach (var content in subject.Content)
             {
                 var subjectContent = new SubjectContent
                 {
                    
-                    Clos = subject.Clos[subject.DetailContent.IndexOf(content)],
+                    Clos = subject.Clos[subject.Content.IndexOf(content)],
                     Content = content,
-                    Method  = subject.Method[subject.DetailContent.IndexOf(content)],
-                    NLessons = subject.NLessons[subject.DetailContent.IndexOf(content)],
-                    Bonus = subject.Bonus[subject.DetailContent.IndexOf(content)],
+                    Method  = subject.Method[subject.Content.IndexOf(content)],
+                    NLessons = subject.NLessons[subject.Content.IndexOf(content)],
+                    Bonus = subject.Bonus[subject.Content.IndexOf(content)],
                     SubjectId = _subject.Id
                 };
                 await _context.SubjectContents.AddAsync(subjectContent);
+            }
+
+            foreach (var cloname in subject.EvaluateCloName)
+            {
+                var evaluate = new Evaluate
+                {
+                    CloName = cloname,
+                    Target = subject.Target[subject.EvaluateCloName.IndexOf(cloname)],
+                    Method = subject.Method[subject.EvaluateCloName.IndexOf(cloname)],
+                    Proportion = subject.EvalPropotion[subject.EvaluateCloName.IndexOf(cloname)],
+                    Test = subject.Test[subject.EvaluateCloName.IndexOf(cloname)],
+                    SubjectId = _subject.Id
+                };
+                await _context.Evaluates.AddAsync(evaluate);
+            }
+
+            foreach (var name in subject.EvaluaElementName)
+            {
+                var evalElement = new EvalElement
+                {
+
+                    Name = name, 
+                    Method = subject.EvaluaElementMethod[subject.EvaluaElementName.IndexOf(name)],
+                    Proportion = subject.EvaluaElementPropotion[subject.EvaluaElementName.IndexOf(name)],
+                    SubjectId = _subject.Id
+                };
+                await _context.EvalElements.AddAsync(evalElement);
             }
             await _context.SaveChangesAsync();
             responseModel.Status = Status.Success;
@@ -140,7 +177,7 @@ namespace WebDeCuong.Api.Repositories
 
         public SubjectModel GetById(int id)
         {
-            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x=>x.SubjectOutputStandards).SingleOrDefault(x=> x.Id == id);
+            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x=>x.SubjectOutputStandards).Include(x =>x.SubjectContents).Include(x =>x.Evaluates).Include(x=>x.EvalElements).SingleOrDefault(x=> x.Id == id);
             if (subject != null)
             {
                 return new SubjectModel
@@ -161,11 +198,22 @@ namespace WebDeCuong.Api.Repositories
                     CloName = subject.SubjectOutputStandards.Select(u => u.CloName).ToList(),
                     OutputContent = subject.SubjectOutputStandards.Select(u => u.Content).ToList(),
                     SoPerPi = subject.SubjectOutputStandards.Select(u => u.SoPerPi).ToList(),
-                    DetailContent = subject.SubjectContents.Select(u => u.Content).ToList(),
+
+                    Content = subject.SubjectContents.Select(u => u.Content).ToList(),
                     Clos = subject.SubjectContents.Select(u => u.Clos).ToList(),
                     Method = subject.SubjectContents.Select(u => u.Method).ToList(),
                     NLessons = subject.SubjectContents.Select(u => u.NLessons).ToList(),
                     Bonus = subject.SubjectContents.Select(u => u.Bonus).ToList(),
+
+                    EvaluateCloName = subject.Evaluates.Select(u => u.CloName).ToList(),
+                    EvalPropotion = subject.Evaluates.Select(u => u.Proportion).ToList(),
+                    EvaluateMethod = subject.Evaluates.Select(u => u.Method).ToList(),
+                    Test = subject.Evaluates.Select(u => u.Test).ToList(),
+                    Target = subject.Evaluates.Select(u => u.Target).ToList(),
+
+                    EvaluaElementName = subject.EvalElements.Select(u => u.Name).ToList(),
+                    EvaluaElementMethod = subject.EvalElements.Select(u => u.Method).ToList(),
+                    EvaluaElementPropotion = subject.EvalElements.Select(u => u.Proportion).ToList(),
                 };
             }
             return null;
@@ -185,7 +233,7 @@ namespace WebDeCuong.Api.Repositories
                     return responseModel;
                 }
             }
-            var _subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).Include(x => x.SubjectContents).SingleOrDefault(x => x.Id == id);
+            var _subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).Include(x => x.SubjectContents).Include(x => x.Evaluates).Include(x => x.EvalElements).SingleOrDefault(x => x.Id == id);
             if (_subject != null)
             {
                 _subject.Name = subject.Name;
@@ -222,19 +270,47 @@ namespace WebDeCuong.Api.Repositories
                     await _context.SubjectOutputStandards.AddAsync(subjectoutput);
                 }
                 _subject.SubjectContents.Clear();
-                foreach (var content in subject.DetailContent)
+                foreach (var content in subject.Content)
                 {
                     var subjectContent = new SubjectContent
                     {
 
-                        Clos = subject.Clos[subject.DetailContent.IndexOf(content)],
+                        Clos = subject.Clos[subject.Content.IndexOf(content)],
                         Content = content,
-                        Method = subject.Method[subject.DetailContent.IndexOf(content)],
-                        NLessons = subject.NLessons[subject.DetailContent.IndexOf(content)],
-                        Bonus = subject.Bonus[subject.DetailContent.IndexOf(content)],
+                        Method = subject.Method[subject.Content.IndexOf(content)],
+                        NLessons = subject.NLessons[subject.Content.IndexOf(content)],
+                        Bonus = subject.Bonus[subject.Content.IndexOf(content)],
                         SubjectId = _subject.Id
                     };
                     await _context.SubjectContents.AddAsync(subjectContent);
+                }
+                _subject.Evaluates.Clear();
+                foreach (var cloname in subject.EvaluateCloName)
+                {
+                    var evaluate = new Evaluate
+                    {
+
+                        CloName = cloname,
+                        Target = subject.Target[subject.EvaluateCloName.IndexOf(cloname)],
+                        Method = subject.Method[subject.EvaluateCloName.IndexOf(cloname)],
+                        Proportion = subject.EvalPropotion[subject.EvaluateCloName.IndexOf(cloname)],
+                        Test = subject.Test[subject.EvaluateCloName.IndexOf(cloname)],
+                        SubjectId = _subject.Id
+                    };
+                    await _context.Evaluates.AddAsync(evaluate);
+                }
+                _subject.EvalElements.Clear();
+                foreach (var name in subject.EvaluaElementName)
+                {
+                    var evalElement = new EvalElement
+                    {
+
+                        Name = name,
+                        Method = subject.EvaluaElementMethod[subject.EvaluaElementName.IndexOf(name)],
+                        Proportion = subject.EvaluaElementPropotion[subject.EvaluateCloName.IndexOf(name)],
+                        SubjectId = _subject.Id
+                    };
+                    await _context.EvalElements.AddAsync(evalElement);
                 }
                 await _context.SaveChangesAsync();
                 responseModel.Status = Status.Success;
@@ -251,7 +327,7 @@ namespace WebDeCuong.Api.Repositories
         public async Task<ResponseModel> DeleteSubject(int id)
         {
             var responseModel = new ResponseModel();
-            var _subject = await _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectContents).Include(x => x.SubjectOutputStandards).SingleOrDefaultAsync(x => x.Id == id);
+            var _subject = await _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectContents).Include(x => x.SubjectOutputStandards).Include(x => x.Evaluates).Include(x => x.EvalElements).SingleOrDefaultAsync(x => x.Id == id);
             if(_subject != null)
             {
                 _context.Subjects.Remove(_subject);
