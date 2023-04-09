@@ -168,6 +168,7 @@ namespace WebDeCuong.Api.Repositories
             responseModel.Status = Status.Success;
             responseModel.Result = new
             {
+                Id = user.Id
                 Name = user.FullName,
                 Faculty = user.Faculty,
                 Email = user.Email,
