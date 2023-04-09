@@ -34,9 +34,9 @@ namespace WebDeCuong.Api.Repositories
         public List<UserModel> GetAllUser()
         {
             var users = _userManager.Users.Select(user => new UserModel
-            {   
+            {
                 Username = user.UserName,
-               
+
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Faculty = user.Faculty,
@@ -48,7 +48,7 @@ namespace WebDeCuong.Api.Repositories
         public UserModel GetById(string email)
         {
             var user = _userManager.Users.SingleOrDefault(user => user.Email == email);
-            if (user !=null)
+            if (user != null)
             {
                 return new UserModel
                 {
@@ -109,8 +109,6 @@ namespace WebDeCuong.Api.Repositories
                 responseModel.Status = Status.Success;
                 responseModel.Message = "User Update successfully.";
                 return responseModel;
-
-
             }
             responseModel.Status = Status.Error;
             responseModel.Message = "Not Found User";
@@ -123,7 +121,7 @@ namespace WebDeCuong.Api.Repositories
         {
             var responseModel = new ResponseModel();
             var _user = _userManager.Users.SingleOrDefault(_user => _user.Email == email);
-            if(_user != null)
+            if (_user != null)
             {
                 var result = await _userManager.DeleteAsync(_user);
                 if (!result.Succeeded)
@@ -168,7 +166,6 @@ namespace WebDeCuong.Api.Repositories
             responseModel.Status = Status.Success;
             responseModel.Result = new
             {
-                Id = user.Id,
                 Name = user.FullName,
                 Faculty = user.Faculty,
                 Email = user.Email,
@@ -180,6 +177,39 @@ namespace WebDeCuong.Api.Repositories
                 Roles = roles[0]
             };
             return responseModel;
+        }
+
+        public async Task<ResponseModel> ChangePassword(ChangePasswordModel model)
+        {
+            var resModel = new ResponseModel();
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "User not found.";
+                return resModel;
+            }
+
+            var changePassRes = await _userManager
+                .ChangePasswordAsync(user, model.Password, model.NewPassword);
+
+            if (!changePassRes.Succeeded)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "";
+
+                foreach (var err in changePassRes.Errors)
+                {
+                    resModel.Message = resModel.Message + err.Description + '\n';
+                }
+
+                return resModel;
+            }
+
+            resModel.Status = Status.Success;
+            resModel.Message = "Password was successfully changed.";
+            return resModel;
         }
     }
 }

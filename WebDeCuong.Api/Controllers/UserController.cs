@@ -88,6 +88,16 @@ namespace WebDeCuong.Api.Controllers
                 return BadRequest(result);
             return Ok(result);
         }
+
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            var result = await _userRepository.ChangePassword(model);
+
+            if (result.Status.CompareTo(Status.Error) == 0)
+                return BadRequest(result);
+            return Ok(result);
+        }
             
     }
 }
