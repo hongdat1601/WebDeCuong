@@ -174,12 +174,11 @@ namespace WebDeCuong.Api.Repositories
                 Email = user.Email,
                 Phone = user.PhoneNumber,
                 PlaceOfBirth = user.PlaceOfBirth,
-                DateOfBirth = user.DateOfBirth,
+                DateOfBirth = user.DateOfBirth.ToString("MM/dd/yyyy"),
                 Gender = user.Gender,
                 FullName = user.FullName,
                 Roles = roles[0]
             };
-
             return responseModel;
         }
     }
