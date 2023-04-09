@@ -174,7 +174,7 @@ namespace WebDeCuong.Api.Repositories
                 Email = user.Email,
                 Phone = user.PhoneNumber,
                 PlaceOfBirth = user.PlaceOfBirth,
-                DateOfBirth = user.DateOfBirth.ToString("MM/dd/yyyy"),
+                DateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
                 Gender = user.Gender,
                 FullName = user.FullName,
                 Roles = roles[0]
