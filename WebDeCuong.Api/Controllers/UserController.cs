@@ -59,16 +59,18 @@ namespace WebDeCuong.Api.Controllers
                 return BadRequest(result);
             return Ok(result);
         }
+
         [HttpPut]
-        public async Task<IActionResult> UpdateUser(UserModel user)
+        public async Task<IActionResult> UpdateUser(UpdateUserModel model)
         {
-            var result = await _userRepository.UpdateUser(user);
+            var result = await _userRepository.UpdateUser(model);
             if(result.Status.CompareTo(Status.Error) == 0)
             {
                 return BadRequest(result);
             }
             return Ok(result);
         }
+
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteUser(string email)
         {

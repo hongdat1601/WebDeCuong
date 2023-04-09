@@ -8,7 +8,7 @@ namespace WebDeCuong.Api.Repositories.Interfaces
         List<UserModel> GetAllUser();
         UserModel GetById(string email);
         Task<ResponseModel> AddUser(UserModel user);
-        Task<ResponseModel> UpdateUser(UserModel user);
+        Task<ResponseModel> UpdateUser(UpdateUserModel model);
         Task<ResponseModel> DeleteUser(string email);
         Task<ResponseModel> GetCurrentUserInfo();
         Task<ResponseModel> ChangePassword(ChangePasswordModel model);

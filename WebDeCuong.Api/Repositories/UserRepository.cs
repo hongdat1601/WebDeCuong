@@ -87,36 +87,49 @@ namespace WebDeCuong.Api.Repositories
             responseModel.Message = "User created successfully.";
 
             return responseModel;
-
         }
-        public async Task<ResponseModel> UpdateUser(UserModel user)
+
+        public async Task<ResponseModel> UpdateUser(UpdateUserModel model)
         {
             var responseModel = new ResponseModel();
-            var _user = _userManager.Users.SingleOrDefault(_user => _user.Email == user.Email);
-            if (_user != null)
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
             {
-                _user.UserName = user.Username;
-                _user.PhoneNumber = user.PhoneNumber;
-                _user.Faculty = user.Faculty;
-                _user.FullName = user.FullName;
-                var result = await _userManager.UpdateAsync(_user);
-                if (!result.Succeeded)
-                {
-                    responseModel.Status = Status.Error;
-                    responseModel.Message = "";
-                    return responseModel;
-                }
-                responseModel.Status = Status.Success;
-                responseModel.Message = "User Update successfully.";
+                responseModel.Status = Status.Error;
+                responseModel.Message = "User Not Found.";
+
                 return responseModel;
             }
-            responseModel.Status = Status.Error;
-            responseModel.Message = "Not Found User";
+
+            user.FullName = model.FullName;
+            user.Faculty = model.Faculty;
+            user.PhoneNumber = model.Phone;
+            user.PlaceOfBirth = model.PlaceOfBirth;
+            user.DateOfBirth = model.DateOfBirth;
+            user.Gender = model.Gender;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                responseModel.Status = Status.Error;
+                responseModel.Message = "";
+
+                foreach (var err in result.Errors)
+                {
+                    responseModel.Message = responseModel.Message + err.Description + '\n';
+                }
+
+                return responseModel;
+            }
+
+            responseModel.Status = Status.Success;
+            responseModel.Message = "User was successfully updated.";
+
             return responseModel;
-
-
-
         }
+
         public async Task<ResponseModel> DeleteUser(string email)
         {
             var responseModel = new ResponseModel();
@@ -166,7 +179,6 @@ namespace WebDeCuong.Api.Repositories
             responseModel.Status = Status.Success;
             responseModel.Result = new
             {
-                Name = user.FullName,
                 Faculty = user.Faculty,
                 Email = user.Email,
                 Phone = user.PhoneNumber,
