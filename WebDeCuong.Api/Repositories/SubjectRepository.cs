@@ -25,7 +25,7 @@ namespace WebDeCuong.Api.Repositories
 
         public List<SubjectModel> GetAllSubject()
         {
-            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).ToList();
+            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).Include(x =>x.SubjectContents).ToList();
             var subjectModels = subject.Select(s => new SubjectModel
             {
 
@@ -40,12 +40,20 @@ namespace WebDeCuong.Api.Repositories
                 B = s.B,
                 C = s.C,
                 Other = s.Other,
+
                 UserId = s.SubjectUsers.Select(u => u.UserId).ToList(),
+
                 CloName = s.SubjectOutputStandards.Select(u => u.CloName).ToList(),
-                Content = s.SubjectOutputStandards.Select(u => u.Content).ToList(),
+                OutputContent = s.SubjectOutputStandards.Select(u => u.Content).ToList(),
                 SoPerPi = s.SubjectOutputStandards.Select(u => u.SoPerPi).ToList(),
-                
-            }) ;
+
+                DetailContent = s.SubjectContents.Select(u => u.Content).ToList(),
+                Clos = s.SubjectContents.Select(u => u.Clos).ToList(),
+                NLessons = s.SubjectContents.Select(u => u.NLessons).ToList(),
+                Bonus = s.SubjectContents.Select(u => u.Bonus).ToList(),
+                Method = s.SubjectContents.Select(u=>u.Method).ToList()
+            });
+        
 
             return subjectModels.ToList();
         }
@@ -103,11 +111,25 @@ namespace WebDeCuong.Api.Repositories
                 var subjectoutput = new SubjectOutputStandard
                 {
                     CloName = cloname,
-                    Content = subject.Content[subject.CloName.IndexOf(cloname)],
+                    Content = subject.OutputContent[subject.CloName.IndexOf(cloname)],
                     SoPerPi = subject.SoPerPi[subject.CloName.IndexOf(cloname)],
                     SubjectId = _subject.Id
                 };
                 await _context.SubjectOutputStandards.AddAsync(subjectoutput);
+            }
+            foreach (var content in subject.DetailContent)
+            {
+                var subjectContent = new SubjectContent
+                {
+                   
+                    Clos = subject.Clos[subject.DetailContent.IndexOf(content)],
+                    Content = content,
+                    Method  = subject.Method[subject.DetailContent.IndexOf(content)],
+                    NLessons = subject.NLessons[subject.DetailContent.IndexOf(content)],
+                    Bonus = subject.Bonus[subject.DetailContent.IndexOf(content)],
+                    SubjectId = _subject.Id
+                };
+                await _context.SubjectContents.AddAsync(subjectContent);
             }
             await _context.SaveChangesAsync();
             responseModel.Status = Status.Success;
@@ -137,8 +159,13 @@ namespace WebDeCuong.Api.Repositories
                     Other = subject.Other,
                     UserId = subject.SubjectUsers.Select(u => u.UserId).ToList(),
                     CloName = subject.SubjectOutputStandards.Select(u => u.CloName).ToList(),
-                    Content = subject.SubjectOutputStandards.Select(u => u.Content).ToList(),
-                    SoPerPi = subject.SubjectOutputStandards.Select(u => u.SoPerPi).ToList()
+                    OutputContent = subject.SubjectOutputStandards.Select(u => u.Content).ToList(),
+                    SoPerPi = subject.SubjectOutputStandards.Select(u => u.SoPerPi).ToList(),
+                    DetailContent = subject.SubjectContents.Select(u => u.Content).ToList(),
+                    Clos = subject.SubjectContents.Select(u => u.Clos).ToList(),
+                    Method = subject.SubjectContents.Select(u => u.Method).ToList(),
+                    NLessons = subject.SubjectContents.Select(u => u.NLessons).ToList(),
+                    Bonus = subject.SubjectContents.Select(u => u.Bonus).ToList(),
                 };
             }
             return null;
@@ -158,7 +185,7 @@ namespace WebDeCuong.Api.Repositories
                     return responseModel;
                 }
             }
-            var _subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).SingleOrDefault(x => x.Id == id);
+            var _subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).Include(x => x.SubjectContents).SingleOrDefault(x => x.Id == id);
             if (_subject != null)
             {
                 _subject.Name = subject.Name;
@@ -188,11 +215,26 @@ namespace WebDeCuong.Api.Repositories
                     var subjectoutput = new SubjectOutputStandard
                     {
                         CloName = cloname,
-                        Content = subject.Content[subject.CloName.IndexOf(cloname)],
+                        Content = subject.OutputContent[subject.CloName.IndexOf(cloname)],
                         SoPerPi = subject.SoPerPi[subject.CloName.IndexOf(cloname)],
                         SubjectId = _subject.Id
                     };
                     await _context.SubjectOutputStandards.AddAsync(subjectoutput);
+                }
+                _subject.SubjectContents.Clear();
+                foreach (var content in subject.DetailContent)
+                {
+                    var subjectContent = new SubjectContent
+                    {
+
+                        Clos = subject.Clos[subject.DetailContent.IndexOf(content)],
+                        Content = content,
+                        Method = subject.Method[subject.DetailContent.IndexOf(content)],
+                        NLessons = subject.NLessons[subject.DetailContent.IndexOf(content)],
+                        Bonus = subject.Bonus[subject.DetailContent.IndexOf(content)],
+                        SubjectId = _subject.Id
+                    };
+                    await _context.SubjectContents.AddAsync(subjectContent);
                 }
                 await _context.SaveChangesAsync();
                 responseModel.Status = Status.Success;
@@ -209,7 +251,7 @@ namespace WebDeCuong.Api.Repositories
         public async Task<ResponseModel> DeleteSubject(int id)
         {
             var responseModel = new ResponseModel();
-            var _subject = await _context.Subjects.Include(x => x.SubjectUsers).SingleOrDefaultAsync(x => x.Id == id);
+            var _subject = await _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectContents).Include(x => x.SubjectOutputStandards).SingleOrDefaultAsync(x => x.Id == id);
             if(_subject != null)
             {
                 _context.Subjects.Remove(_subject);
