@@ -63,7 +63,7 @@ namespace WebDeCuong.Api.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateUser(UpdateUserModel model)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserModel model)
         {
             var result = await _userRepository.UpdateUser(model);
             if(result.Status.CompareTo(Status.Error) == 0)
