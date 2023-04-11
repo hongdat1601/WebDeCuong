@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -31,20 +32,37 @@ namespace WebDeCuong.Api.Repositories
             _contextAccessor = contextAccessor;
         }
 
-        public List<UserModel> GetAllUser()
+        public async Task<List<UpdateUserModel>> GetAllUser()
         {
-            var users = _userManager.Users.Select(user => new UserModel
+            var users = await _userManager.Users.ToListAsync();
+
+            var results = new List<UpdateUserModel>();
+
+            foreach (var user in users)
             {
-                Username = user.UserName,
-
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                Faculty = user.Faculty,
-                FullName = user.FullName
-
-            });
-            return users.ToList();
+                var roles = await _userManager.GetRolesAsync(user);
+                foreach (var role in roles)
+                {
+                    if (role.CompareTo("User") == 0)
+                    {
+                        results.Add(new UpdateUserModel
+                        {
+                            DateOfBirth = user.DateOfBirth.ToString("yyyy/MM/dd"),
+                            Email = user.Email!,
+                            Faculty = user.Faculty,
+                            FullName = user.FullName,
+                            Gender = user.Gender,
+                            Phone = user.PhoneNumber!,
+                            PlaceOfBirth = user.PlaceOfBirth
+                        });
+                        break;
+                    }
+                }
+            }
+            
+            return results;
         }
+
         public UserModel GetById(string email)
         {
             var user = _userManager.Users.SingleOrDefault(user => user.Email == email);
@@ -221,6 +239,41 @@ namespace WebDeCuong.Api.Repositories
 
             resModel.Status = Status.Success;
             resModel.Message = "Password was successfully changed.";
+            return resModel;
+        }
+
+        public async Task<ResponseModel> ResetPassword(string Email)
+        {
+            var resModel = new ResponseModel();
+
+            var user = await _userManager.FindByEmailAsync(Email);
+            if (user == null)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "User not found.";
+
+                return resModel;
+            }
+
+            PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+            user.PasswordHash = ph.HashPassword(user, "123456@Abc");
+
+            var res = await _userManager.UpdateAsync(user);
+            if (!res.Succeeded)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "";
+
+                foreach (var err in res.Errors)
+                {
+                    resModel.Message = resModel.Message + err.Description + '\n';
+                }
+
+                return resModel;
+            }
+
+            resModel.Status = Status.Success;
+            resModel.Message = "User password successfuly reseted.";
             return resModel;
         }
     }

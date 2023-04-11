@@ -21,17 +21,40 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return Ok(_userRepository.GetAllUser());
+                var users = await _userRepository.GetAllUser();
+                return Ok(users);
             }
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpPut("ResetPassword")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ResetPassword([FromBody] string email)
+        {
+            var result = await _userRepository.ResetPassword(email!);
+            if (result.Status.CompareTo(Status.Error) == 0)
+                return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPut("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            var result = await _userRepository.ChangePassword(model);
+
+            if (result.Status.CompareTo(Status.Error) == 0)
+                return BadRequest(result);
+            return Ok(result);
+        }
+
         [HttpGet("{email}")]
         public IActionResult GetUserById(string email)
         {
@@ -53,7 +76,7 @@ namespace WebDeCuong.Api.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult> AddUser([FromForm, FromBody]UserModel user)
+        public async Task<ActionResult> AddUser([FromBody]UserModel user)
         {
             var result = await _userRepository.AddUser(user);
 
@@ -89,16 +112,6 @@ namespace WebDeCuong.Api.Controllers
         public async Task<IActionResult> GetCurrentUserInfo()
         {
             var result = await _userRepository.GetCurrentUserInfo();
-            if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
-            return Ok(result);
-        }
-
-        [HttpPost("changePassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
-        {
-            var result = await _userRepository.ChangePassword(model);
-
             if (result.Status.CompareTo(Status.Error) == 0)
                 return BadRequest(result);
             return Ok(result);

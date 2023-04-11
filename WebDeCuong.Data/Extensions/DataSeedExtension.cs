@@ -38,8 +38,10 @@ namespace WebDeCuong.Data.Extensions
             builder.Entity<IdentityRole>().HasData(roles);
 
             // Users
+            var users = new List<ApplicationUser>();
+            var userRoles = new List<IdentityUserRole<string>>();
+
             var adminId = Guid.NewGuid().ToString();
-            var userId = Guid.NewGuid().ToString();
 
             var admin = new ApplicationUser
             {
@@ -59,42 +61,46 @@ namespace WebDeCuong.Data.Extensions
             PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
             admin.PasswordHash = ph.HashPassword(admin, "123456@Abc");
 
-            var user = new ApplicationUser
+            users.Add(admin);
+            userRoles.Add(new IdentityUserRole<string>
             {
-                Id = userId,
-                Email = "user@gmail.com",
-                UserName = "user@gmail.com",
-                DateOfBirth = DateTime.Now,
-                Faculty = "Công nghệ thông tin",
-                FullName = "Nguyễn Thị B",
-                Gender = false,
-                NormalizedEmail = "USER@GMAIL.COM",
-                NormalizedUserName = "USER@GMAIL.COM",
-                PhoneNumber = "0900000000",
-                PlaceOfBirth = "TP.HCM",
-            };
-
-            user.PasswordHash = ph.HashPassword(user, "123456@Abc");
-
-            builder.Entity<ApplicationUser>().HasData(new List<ApplicationUser>
-            {
-                user, admin
+                RoleId = adminRoleId,
+                UserId = adminId
             });
 
-            // User Roles
-            builder.Entity<IdentityUserRole<string>>().HasData(new List<IdentityUserRole<string>>
+            for (int i = 0; i < 10; i++)
             {
-                new IdentityUserRole<string>
+                var userId = Guid.NewGuid().ToString();
+
+                var user = new ApplicationUser
                 {
-                    RoleId = adminRoleId,
-                    UserId = adminId
-                },
-                new IdentityUserRole<string>
+                    Id = userId,
+                    Email = $"user{i}@gmail.com",
+                    UserName = $"user{i}@gmail.com",
+                    DateOfBirth = DateTime.Now,
+                    Faculty = "Công nghệ thông tin",
+                    FullName = $"Nguyễn Thị B_{i}",
+                    Gender = false,
+                    NormalizedEmail = $"USER{i}@GMAIL.COM",
+                    NormalizedUserName = $"USER{i}@GMAIL.COM",
+                    PhoneNumber = "0900000000",
+                    PlaceOfBirth = "TP.HCM",
+                };
+
+                user.PasswordHash = ph.HashPassword(user, "123456@Abc");
+
+                users.Add(user);
+                userRoles.Add(new IdentityUserRole<string>
                 {
                     RoleId = userRoleId,
                     UserId = userId
-                },
-            });
+                });
+            }
+
+            builder.Entity<ApplicationUser>().HasData(users);
+
+            // User Roles
+            builder.Entity<IdentityUserRole<string>>().HasData(userRoles);
 
             return builder;
         }
