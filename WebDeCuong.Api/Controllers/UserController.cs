@@ -49,9 +49,9 @@ namespace WebDeCuong.Api.Controllers
 
         [HttpPut("ResetPassword")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ResetPassword([FromBody] string email)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
-            var result = await _userRepository.ResetPassword(email!);
+            var result = await _userRepository.ResetPassword(model.Email);
             if (result.Status.CompareTo(Status.Error) == 0)
                 return BadRequest(result);
             return Ok(result);
@@ -98,10 +98,10 @@ namespace WebDeCuong.Api.Controllers
         }
 
 
-        [HttpDelete()]
-        public async Task<IActionResult> DeleteUser([FromBody] string email)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser([FromBody] DeleteUserModel model)
         {
-            var result = await _userRepository.DeleteUser(email);
+            var result = await _userRepository.DeleteUser(model.Email);
             if(result.Status.CompareTo(Status.Error) == 0)
             {
                 return BadRequest(result);
