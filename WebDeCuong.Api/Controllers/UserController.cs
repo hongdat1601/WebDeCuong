@@ -98,7 +98,7 @@ namespace WebDeCuong.Api.Controllers
         }
 
 
-        [HttpDelete("{email}")]
+        [HttpDelete()]
         public async Task<IActionResult> DeleteUser([FromQuery] string email)
         {
             var result = await _userRepository.DeleteUser(email);
