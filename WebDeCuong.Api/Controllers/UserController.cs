@@ -99,7 +99,7 @@ namespace WebDeCuong.Api.Controllers
 
 
         [HttpDelete("{email}")]
-        public async Task<IActionResult> DeleteUser([FromBody] string email)
+        public async Task<IActionResult> DeleteUser([FromQuery] string email)
         {
             var result = await _userRepository.DeleteUser(email);
             if(result.Status.CompareTo(Status.Error) == 0)
