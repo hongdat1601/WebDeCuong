@@ -59,7 +59,8 @@ namespace WebDeCuong.Api.Repositories
                     }
                 }
             }
-            
+
+            results.Sort((x, y) => x.FullName.CompareTo(y.FullName));
             return results;
         }
 
