@@ -47,7 +47,7 @@ namespace WebDeCuong.Api.Repositories
                     {
                         results.Add(new UpdateUserModel
                         {
-                            DateOfBirth = user.DateOfBirth.ToString("yyyy/MM/dd"),
+                            DateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
                             Email = user.Email!,
                             Faculty = user.Faculty,
                             FullName = user.FullName,
