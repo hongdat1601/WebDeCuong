@@ -37,7 +37,7 @@ namespace WebDeCuong.Api.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserModel model)
+        public async Task<IActionResult> UpdateUser([FromBody] UserModel model)
         {
             var result = await _userRepository.UpdateUser(model);
             if (result.Status.CompareTo(Status.Error) == 0)
@@ -67,27 +67,8 @@ namespace WebDeCuong.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{email}")]
-        public IActionResult GetUserById(string email)
-        {
-            try
-            {
-                var data = _userRepository.GetById(email);
-                if (data!= null)
-                {
-                    return Ok(data);
-                }
-                else
-                {
-                    return NotFound();
-                }    
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddUser([FromBody]UserModel user)
         {
             var result = await _userRepository.AddUser(user);

@@ -32,11 +32,11 @@ namespace WebDeCuong.Api.Repositories
             _contextAccessor = contextAccessor;
         }
 
-        public async Task<List<UpdateUserModel>> GetAllUser()
+        public async Task<List<UserModel>> GetAllUser()
         {
             var users = await _userManager.Users.ToListAsync();
 
-            var results = new List<UpdateUserModel>();
+            var results = new List<UserModel>();
 
             foreach (var user in users)
             {
@@ -45,7 +45,7 @@ namespace WebDeCuong.Api.Repositories
                 {
                     if (role.CompareTo("User") == 0)
                     {
-                        results.Add(new UpdateUserModel
+                        results.Add(new UserModel
                         {
                             DateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
                             Email = user.Email!,
@@ -64,22 +64,6 @@ namespace WebDeCuong.Api.Repositories
             return results;
         }
 
-        public UserModel GetById(string email)
-        {
-            var user = _userManager.Users.SingleOrDefault(user => user.Email == email);
-            if (user != null)
-            {
-                return new UserModel
-                {
-                    Username = user.UserName,
-                    Email = user.Email,
-                    PhoneNumber = user.PhoneNumber,
-                    Faculty = user.Faculty,
-                    FullName = user.FullName
-                };
-            }
-            return null;
-        }
         public async Task<ResponseModel> AddUser(UserModel user)
         {
             var responseModel = new ResponseModel();
@@ -88,16 +72,24 @@ namespace WebDeCuong.Api.Repositories
                 UserName = user.Email,
                 Email = user.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                PhoneNumber = user.PhoneNumber,
                 Faculty = user.Faculty,
-                FullName = user.FullName
-
-            };
+                FullName = user.FullName,
+                Gender = user.Gender,
+                PhoneNumber = user.Phone,
+                PlaceOfBirth = user.PlaceOfBirth,
+                DateOfBirth = DateTime.Parse(user.DateOfBirth)
+        };
             var result = await _userManager.CreateAsync(_user, "123456aA@");
             if (!result.Succeeded)
             {
                 responseModel.Status = Status.Error;
                 responseModel.Message = "";
+
+                foreach (var error in result.Errors)
+                {
+                    responseModel.Message = responseModel.Message + error.Description + '\n';
+                }
+
                 return responseModel;
             }
             await _roleManager.CreateAsync(new IdentityRole("User"));
@@ -108,7 +100,7 @@ namespace WebDeCuong.Api.Repositories
             return responseModel;
         }
 
-        public async Task<ResponseModel> UpdateUser(UpdateUserModel model)
+        public async Task<ResponseModel> UpdateUser(UserModel model)
         {
             var responseModel = new ResponseModel();
             var user = await _userManager.FindByEmailAsync(model.Email);
