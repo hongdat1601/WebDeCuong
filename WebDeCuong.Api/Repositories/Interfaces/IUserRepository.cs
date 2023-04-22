@@ -5,12 +5,12 @@ namespace WebDeCuong.Api.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        List<UserModel> GetAllUser();
-        UserModel GetById(string email);
+        Task<List<UserModel>> GetAllUser();
         Task<ResponseModel> AddUser(UserModel user);
-        Task<ResponseModel> UpdateUser(UserModel user);
+        Task<ResponseModel> UpdateUser(UserModel model);
         Task<ResponseModel> DeleteUser(string email);
-
         Task<ResponseModel> GetCurrentUserInfo();
+        Task<ResponseModel> ChangePassword(ChangePasswordModel model);
+        Task<ResponseModel> ResetPassword(string Email);
     }
 }

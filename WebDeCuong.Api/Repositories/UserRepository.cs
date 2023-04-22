@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
@@ -32,39 +33,38 @@ namespace WebDeCuong.Api.Repositories
             _contextAccessor = contextAccessor;
         }
 
-        public List<UserModel> GetAllUser()
+        public async Task<List<UserModel>> GetAllUser()
         {
-            var users = _userManager.Users.Select(user => new UserModel
-            {   
-                Username = user.UserName,
-               
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                Faculty = user.Faculty,
-                FullName = user.FullName
+            var users = await _userManager.Users.ToListAsync();
 
-            });
-            return users.ToList();
-        }
-        public UserModel GetById(string email)
-        {
-            var user = _userManager.Users.SingleOrDefault(user => user.Email == email);
-            if (user !=null)
+            var results = new List<UserModel>();
+
+            foreach (var user in users)
             {
-                return new UserModel
+                var roles = await _userManager.GetRolesAsync(user);
+                foreach (var role in roles)
                 {
-                    Username = user.UserName,
-                    Email = user.Email,
-                    PhoneNumber = user.PhoneNumber,
-                    Faculty = user.Faculty,
-                    FullName = user.FullName,
-                    DateOfBirth = user.DateOfBirth,
-                    Gender = user.Gender,
-                    PlaceOfBirth = user.PlaceOfBirth
-                };
+                    if (role.CompareTo("User") == 0)
+                    {
+                        results.Add(new UserModel
+                        {
+                            DateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
+                            Email = user.Email!,
+                            Faculty = user.Faculty,
+                            FullName = user.FullName,
+                            Gender = user.Gender,
+                            Phone = user.PhoneNumber!,
+                            PlaceOfBirth = user.PlaceOfBirth
+                        });
+                        break;
+                    }
+                }
             }
-            return null;
+
+            results.Sort((x, y) => x.FullName.CompareTo(y.FullName));
+            return results;
         }
+
         public async Task<ResponseModel> AddUser(UserModel user)
         {
             var responseModel = new ResponseModel();
@@ -73,19 +73,24 @@ namespace WebDeCuong.Api.Repositories
                 UserName = user.Email,
                 Email = user.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                PhoneNumber = user.PhoneNumber,
                 Faculty = user.Faculty,
                 FullName = user.FullName,
-                DateOfBirth = user.DateOfBirth,
                 Gender = user.Gender,
-                PlaceOfBirth = user.PlaceOfBirth
-
-            };
+                PhoneNumber = user.Phone,
+                PlaceOfBirth = user.PlaceOfBirth,
+                DateOfBirth = DateTime.Parse(user.DateOfBirth)
+        };
             var result = await _userManager.CreateAsync(_user, "123456aA@");
             if (!result.Succeeded)
             {
                 responseModel.Status = Status.Error;
                 responseModel.Message = "";
+
+                foreach (var error in result.Errors)
+                {
+                    responseModel.Message = responseModel.Message + error.Description + '\n';
+                }
+
                 return responseModel;
             }
             await _roleManager.CreateAsync(new IdentityRole("User"));
@@ -94,46 +99,54 @@ namespace WebDeCuong.Api.Repositories
             responseModel.Message = "User created successfully.";
 
             return responseModel;
-
         }
-        public async Task<ResponseModel> UpdateUser(UserModel user)
+
+        public async Task<ResponseModel> UpdateUser(UserModel model)
         {
             var responseModel = new ResponseModel();
-            var _user = _userManager.Users.SingleOrDefault(_user => _user.Email == user.Email);
-            if (_user != null)
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
             {
-                _user.UserName = user.Username;
-                _user.PhoneNumber = user.PhoneNumber;
-                _user.Faculty = user.Faculty;
-                _user.FullName = user.FullName;
-                _user.DateOfBirth = user.DateOfBirth;
-                _user.Gender = user.Gender;
-                _user.PlaceOfBirth = user.PlaceOfBirth;
-                var result = await _userManager.UpdateAsync(_user);
-                if (!result.Succeeded)
-                {
-                    responseModel.Status = Status.Error;
-                    responseModel.Message = "";
-                    return responseModel;
-                }
-                responseModel.Status = Status.Success;
-                responseModel.Message = "User Update successfully.";
+                responseModel.Status = Status.Error;
+                responseModel.Message = "User Not Found.";
+
                 return responseModel;
-
-
             }
-            responseModel.Status = Status.Error;
-            responseModel.Message = "Not Found User";
+
+            user.FullName = model.FullName;
+            user.Faculty = model.Faculty;
+            user.PhoneNumber = model.Phone;
+            user.PlaceOfBirth = model.PlaceOfBirth;
+            user.Gender = model.Gender;
+            user.DateOfBirth = DateTime.Parse(model.DateOfBirth);
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                responseModel.Status = Status.Error;
+                responseModel.Message = "";
+
+                foreach (var err in result.Errors)
+                {
+                    responseModel.Message = responseModel.Message + err.Description + '\n';
+                }
+
+                return responseModel;
+            }
+
+            responseModel.Status = Status.Success;
+            responseModel.Message = "User was successfully updated.";
+
             return responseModel;
-
-
-
         }
+
         public async Task<ResponseModel> DeleteUser(string email)
         {
             var responseModel = new ResponseModel();
             var _user = _userManager.Users.SingleOrDefault(_user => _user.Email == email);
-            if(_user != null)
+            if (_user != null)
             {
                 var result = await _userManager.DeleteAsync(_user);
                 if (!result.Succeeded)
@@ -178,12 +191,84 @@ namespace WebDeCuong.Api.Repositories
             responseModel.Status = Status.Success;
             responseModel.Result = new
             {
+                Faculty = user.Faculty,
                 Email = user.Email,
+                Phone = user.PhoneNumber,
+                PlaceOfBirth = user.PlaceOfBirth,
+                DateOfBirth = user.DateOfBirth.ToString("yyyy-MM-dd"),
+                Gender = user.Gender,
                 FullName = user.FullName,
                 Roles = roles[0]
             };
-
             return responseModel;
+        }
+
+        public async Task<ResponseModel> ChangePassword(ChangePasswordModel model)
+        {
+            var resModel = new ResponseModel();
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "User not found.";
+                return resModel;
+            }
+
+            var changePassRes = await _userManager
+                .ChangePasswordAsync(user, model.Password, model.NewPassword);
+
+            if (!changePassRes.Succeeded)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "";
+
+                foreach (var err in changePassRes.Errors)
+                {
+                    resModel.Message = resModel.Message + err.Description + '\n';
+                }
+
+                return resModel;
+            }
+
+            resModel.Status = Status.Success;
+            resModel.Message = "Password was successfully changed.";
+            return resModel;
+        }
+
+        public async Task<ResponseModel> ResetPassword(string Email)
+        {
+            var resModel = new ResponseModel();
+
+            var user = await _userManager.FindByEmailAsync(Email);
+            if (user == null)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "User not found.";
+
+                return resModel;
+            }
+
+            PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+            user.PasswordHash = ph.HashPassword(user, "123456@Abc");
+
+            var res = await _userManager.UpdateAsync(user);
+            if (!res.Succeeded)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "";
+
+                foreach (var err in res.Errors)
+                {
+                    resModel.Message = resModel.Message + err.Description + '\n';
+                }
+
+                return resModel;
+            }
+
+            resModel.Status = Status.Success;
+            resModel.Message = "User password successfuly reseted.";
+            return resModel;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WebDeCuong.Api.Cons;
@@ -8,6 +9,7 @@ using WebDeCuong.Api.Repositories.Interfaces;
 namespace WebDeCuong.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -19,39 +21,55 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return Ok(_userRepository.GetAllUser());
+                var users = await _userRepository.GetAllUser();
+                return Ok(users);
             }
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpGet("{email}")]
-        public IActionResult GetUserById(string email)
+
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserModel model)
         {
-            try
+            var result = await _userRepository.UpdateUser(model);
+            if (result.Status.CompareTo(Status.Error) == 0)
             {
-                var data = _userRepository.GetById(email);
-                if (data!= null)
-                {
-                    return Ok(data);
-                }
-                else
-                {
-                    return NotFound();
-                }    
+                return BadRequest(result);
             }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return Ok(result);
         }
+
+        [HttpPut("ResetPassword")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+        {
+            var result = await _userRepository.ResetPassword(model.Email);
+            if (result.Status.CompareTo(Status.Error) == 0)
+                return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            var result = await _userRepository.ChangePassword(model);
+
+            if (result.Status.CompareTo(Status.Error) == 0)
+                return BadRequest(result);
+            return Ok(result);
+        }
+
         [HttpPost]
-        public async Task<ActionResult> AddUser([FromForm, FromBody]UserModel user)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> AddUser([FromBody]UserModel user)
         {
             var result = await _userRepository.AddUser(user);
 
@@ -60,19 +78,10 @@ namespace WebDeCuong.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateUser(UserModel user)
-        {
-            var result = await _userRepository.UpdateUser(user);
-            if(result.Status.CompareTo(Status.Error) == 0)
-            {
-                return BadRequest(result);
-            }
-            return Ok(result);
-        }
 
-        [HttpDelete("{email}")]
-        public async Task<IActionResult> DeleteUser(string email)
+        [Authorize(Roles="Admin")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser([FromQuery] string email)
         {
             var result = await _userRepository.DeleteUser(email);
             if(result.Status.CompareTo(Status.Error) == 0)

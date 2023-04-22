@@ -42,6 +42,17 @@ builder.Services.AddSwaggerGen(options =>
   });
 });
 
+// Add Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("test", config =>
+    {
+        config.AllowAnyHeader();
+        config.AllowAnyMethod();
+        config.AllowAnyOrigin();
+    });
+});
+
 // Add EF Core DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("test1")));
@@ -89,6 +100,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("test");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

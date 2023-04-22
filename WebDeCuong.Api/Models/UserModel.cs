@@ -1,20 +1,13 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using WebDeCuong.Data.Entities;
-
-namespace WebDeCuong.Api.Models
+﻿namespace WebDeCuong.Api.Models
 {
-	public class UserModel
-	{
-		public string? Username { get; set; }
-		public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-		public string Faculty { get; set; }
-		public string FullName { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public bool Gender { get; set; }
-        public string PlaceOfBirth { get; set; }
-       
+    public class UserModel
+    {
+        public required string Email { get; set; }
+        public required string FullName { get; set; }
+        public required string Faculty { get; set; }
+        public required string Phone { get; set; }
+        public required string PlaceOfBirth { get; set; }
+        public required string DateOfBirth { get; set; }
+        public required bool Gender { get; set; }
     }
 }
-
