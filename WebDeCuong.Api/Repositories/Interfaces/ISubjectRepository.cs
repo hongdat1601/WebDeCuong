@@ -5,11 +5,12 @@ namespace WebDeCuong.Api.Repositories.Interfaces
 {
     public interface ISubjectRepository
     {
-        List<SubjectModel> GetAllSubject();
-        SubjectModel GetById(int id);
+        Task<List<SubjectGetModel>> GetAllSubject();
+        Task<ResponseModel> GetSubject(string Id);
+
         Task<ResponseModel> AddSubject(SubjectModel subject);
-        Task<ResponseModel> UpdateSubject(SubjectModel subject,int id);
-        Task<ResponseModel> DeleteSubject(int id);
+        Task<ResponseModel> UpdateSubject(SubjectModel subject);
+        Task<ResponseModel> DeleteSubject(string Id);
 
    
     }

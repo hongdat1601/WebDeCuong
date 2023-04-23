@@ -12,8 +12,8 @@ using WebDeCuong.Data;
 namespace WebDeCuong.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230409084623_InitDb")]
-    partial class InitDb
+    [Migration("20230423032941_initDB")]
+    partial class initDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,15 +54,15 @@ namespace WebDeCuong.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3d8a544a-1200-4ab9-b9dd-c0ae810d5cd5",
-                            ConcurrencyStamp = "3d8a544a-1200-4ab9-b9dd-c0ae810d5cd5",
+                            Id = "6c96d55c-e00b-4a14-8766-9bec794b2d9b",
+                            ConcurrencyStamp = "6c96d55c-e00b-4a14-8766-9bec794b2d9b",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "7564c202-054f-450c-93bf-3393bc948104",
-                            ConcurrencyStamp = "7564c202-054f-450c-93bf-3393bc948104",
+                            Id = "3ed16290-12b1-4ca7-8fb6-13e879a945b3",
+                            ConcurrencyStamp = "3ed16290-12b1-4ca7-8fb6-13e879a945b3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -157,13 +157,58 @@ namespace WebDeCuong.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "874325af-233f-422c-817b-70521beb1e7b",
-                            RoleId = "7564c202-054f-450c-93bf-3393bc948104"
+                            UserId = "c9754d31-d282-470f-b99d-084453b9f1ac",
+                            RoleId = "3ed16290-12b1-4ca7-8fb6-13e879a945b3"
                         },
                         new
                         {
-                            UserId = "b38f9215-217b-43fb-b7de-eb58904b87ce",
-                            RoleId = "3d8a544a-1200-4ab9-b9dd-c0ae810d5cd5"
+                            UserId = "657cc661-90c2-4b6c-a952-e7925b256da0",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
+                        },
+                        new
+                        {
+                            UserId = "d8f3c3e9-9cff-449e-a00b-2fc0033308a3",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
+                        },
+                        new
+                        {
+                            UserId = "fd719ca2-6ef9-47ad-b91a-b71dc3d7829c",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
+                        },
+                        new
+                        {
+                            UserId = "e14cebd5-2d14-4e8f-9b90-141853435fee",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
+                        },
+                        new
+                        {
+                            UserId = "f5f17191-fa50-4660-aa39-7c18e27d1543",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
+                        },
+                        new
+                        {
+                            UserId = "4b173b8e-e8d1-411a-8c3d-5584add6a71a",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
+                        },
+                        new
+                        {
+                            UserId = "a72e903f-016b-41f1-af45-77150ee89235",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
+                        },
+                        new
+                        {
+                            UserId = "4a029e96-bcd3-44b4-9066-61aaeaeab6fa",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
+                        },
+                        new
+                        {
+                            UserId = "9ee4498d-c1af-4898-9ccc-59a5e0ca95dd",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
+                        },
+                        new
+                        {
+                            UserId = "7c1279b8-5821-43dd-90ca-9af527dc5135",
+                            RoleId = "6c96d55c-e00b-4a14-8766-9bec794b2d9b"
                         });
                 });
 
@@ -271,32 +316,10 @@ namespace WebDeCuong.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b38f9215-217b-43fb-b7de-eb58904b87ce",
+                            Id = "c9754d31-d282-470f-b99d-084453b9f1ac",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3300c540-ed2b-4126-86c8-0425cbed2fba",
-                            DateOfBirth = new DateTime(2023, 4, 9, 15, 46, 23, 229, DateTimeKind.Local).AddTicks(8169),
-                            Email = "user@gmail.com",
-                            EmailConfirmed = false,
-                            Faculty = "Công nghệ thông tin",
-                            FullName = "Nguyễn Văn A",
-                            Gender = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "USER@GMAIL.COM",
-                            NormalizedUserName = "USER@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEExgG8x0IExxf99WGIiud/6E/A7L35y6HWoXEzOcvZa6mkK2M42zscdDuEwCHYiRrA==",
-                            PhoneNumber = "0900000000",
-                            PhoneNumberConfirmed = false,
-                            PlaceOfBirth = "TP.HCM",
-                            SecurityStamp = "d69e3b9f-8801-4a20-968b-955b39b463c3",
-                            TwoFactorEnabled = false,
-                            UserName = "user@gmail.com"
-                        },
-                        new
-                        {
-                            Id = "874325af-233f-422c-817b-70521beb1e7b",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "8dc53f20-c74f-4d84-89cf-69fc0cc2c9d2",
-                            DateOfBirth = new DateTime(2023, 4, 9, 15, 46, 23, 99, DateTimeKind.Local).AddTicks(4785),
+                            ConcurrencyStamp = "6359d5fb-c9aa-471b-b43e-b7e5ecabb3c2",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 48, DateTimeKind.Local).AddTicks(362),
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             Faculty = "Khoa học máy tính",
@@ -305,13 +328,233 @@ namespace WebDeCuong.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEdNF7JDq94epuqN1gKj9VBhHQd+RHJwGdRcR1Qnd27YB0TnnuKjE/edPK48i/XiLw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFaKzEM0SdqA4nY7OfyDq71cFRKQyCVzyJxS0xpRUoASrsEn7j4yUwjIUPS4smo/wQ==",
                             PhoneNumber = "0900000000",
                             PhoneNumberConfirmed = false,
                             PlaceOfBirth = "TP.HCM",
-                            SecurityStamp = "48b82cdd-50e6-4712-bc71-db454a973bdf",
+                            SecurityStamp = "d537df78-0388-47b2-91b2-5eafd8b7c168",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "657cc661-90c2-4b6c-a952-e7925b256da0",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e42d2712-1476-45ca-8f62-6856494b9d5e",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 136, DateTimeKind.Local).AddTicks(4251),
+                            Email = "user0@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_0",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER0@GMAIL.COM",
+                            NormalizedUserName = "USER0@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEByDPfKpNPTDvXRUVKrvdVp9Eey/ETBzUW7R96AhX6uPlZvpBbabVPsrjTh8UdGNKQ==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "0dac447f-a06f-4b6d-85cd-98d614663f76",
+                            TwoFactorEnabled = false,
+                            UserName = "user0@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "d8f3c3e9-9cff-449e-a00b-2fc0033308a3",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d4cb5c47-8d5b-4004-9c3e-ec65eb0a3126",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 234, DateTimeKind.Local).AddTicks(2805),
+                            Email = "user1@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_1",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER1@GMAIL.COM",
+                            NormalizedUserName = "USER1@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAECpgqMMG7KrifKnGxUxoyeG1KG0rDrLQ+Y0RSoHrLh3u4AK1Qv02XZKh6DgEvwO5CQ==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "eb8798c5-31a7-4ed4-b987-aade1aa5ea3c",
+                            TwoFactorEnabled = false,
+                            UserName = "user1@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "fd719ca2-6ef9-47ad-b91a-b71dc3d7829c",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "414e7f2b-ac2a-4ffc-8786-0b4d7987defd",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 331, DateTimeKind.Local).AddTicks(4669),
+                            Email = "user2@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_2",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER2@GMAIL.COM",
+                            NormalizedUserName = "USER2@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAa5tj5GlueaKSRnRWcI9t6SFl+4j4qrcnIFoZl9F6lpxaVZrWTZ5TPI7IP8nKAQGA==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "97f4933d-400d-4ebb-9c11-d7febe72f338",
+                            TwoFactorEnabled = false,
+                            UserName = "user2@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "e14cebd5-2d14-4e8f-9b90-141853435fee",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "6fdab28e-5876-4a92-b35f-5751485d80cd",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 442, DateTimeKind.Local).AddTicks(6453),
+                            Email = "user3@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_3",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER3@GMAIL.COM",
+                            NormalizedUserName = "USER3@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAq9/8V8XbQ8N2joK6NGg4O5q60ov1fBqbllZq0eFt9+7dteiDb38u4WxgLrg6KlVA==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "20401cb4-6e20-4273-99e7-60918d8b87bd",
+                            TwoFactorEnabled = false,
+                            UserName = "user3@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "f5f17191-fa50-4660-aa39-7c18e27d1543",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2fc32efa-2e3a-42c8-b542-55da056f324a",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 541, DateTimeKind.Local).AddTicks(5305),
+                            Email = "user4@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_4",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER4@GMAIL.COM",
+                            NormalizedUserName = "USER4@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO8xGtjfDCsZpSPVurSNsbjKdVeRwczt/e9oGUdMF7+xcPdN0mIkpMzE0XILdX2adA==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "5ac5aeff-45e1-4386-9b0a-ea9cbfed9ee1",
+                            TwoFactorEnabled = false,
+                            UserName = "user4@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "4b173b8e-e8d1-411a-8c3d-5584add6a71a",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "880c5985-aaf6-4452-9206-a3b400e21e93",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 641, DateTimeKind.Local).AddTicks(4377),
+                            Email = "user5@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_5",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER5@GMAIL.COM",
+                            NormalizedUserName = "USER5@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEImwecXq2cE1gBjU2CMNXXesZ8m5+rBzFUnmBnAyAzkJeMNke/FOkJWx8Gv/X/pj+w==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "19380265-0167-4736-9e83-2238691e8d4b",
+                            TwoFactorEnabled = false,
+                            UserName = "user5@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "a72e903f-016b-41f1-af45-77150ee89235",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e3a9ff6c-0064-4c05-943c-534ff777394c",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 747, DateTimeKind.Local).AddTicks(5464),
+                            Email = "user6@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_6",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER6@GMAIL.COM",
+                            NormalizedUserName = "USER6@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAENoDFUDt6BtJfnDUBYKN51u2jla0Z8HvfF1HG9zLyXloD1Ajebs/uEQLpUhAHE2GZA==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "6033843a-9ddd-454c-b7da-71781e840b4f",
+                            TwoFactorEnabled = false,
+                            UserName = "user6@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "4a029e96-bcd3-44b4-9066-61aaeaeab6fa",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c3e51348-99ea-4339-9b93-28079f60cde8",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 857, DateTimeKind.Local).AddTicks(9934),
+                            Email = "user7@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_7",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER7@GMAIL.COM",
+                            NormalizedUserName = "USER7@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAOcHGIY+Fs8PflYczqU98XlOIOFgweTo69wSUCCENmE703Cnbnokbpw7lNjNZ+6Kw==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "cbe4c206-64f8-4270-a057-14f0edb1fd5e",
+                            TwoFactorEnabled = false,
+                            UserName = "user7@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "9ee4498d-c1af-4898-9ccc-59a5e0ca95dd",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "450d685c-04a1-4653-b160-22867d87b638",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 40, 960, DateTimeKind.Local).AddTicks(6724),
+                            Email = "user8@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_8",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER8@GMAIL.COM",
+                            NormalizedUserName = "USER8@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEACkFmjJ3t5XYYAzyq3HgaEqqyyUu3S2kqcbs/55z/jCPaRe4X0OMBSKIRnlBEg3Ww==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "b7b81c8c-ad2f-45c9-a9f8-c6bd4f1ea26f",
+                            TwoFactorEnabled = false,
+                            UserName = "user8@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "7c1279b8-5821-43dd-90ca-9af527dc5135",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b44c52d6-4f19-49a9-a16c-13865755e1d2",
+                            DateOfBirth = new DateTime(2023, 4, 23, 10, 29, 41, 49, DateTimeKind.Local).AddTicks(9107),
+                            Email = "user9@gmail.com",
+                            EmailConfirmed = false,
+                            Faculty = "Công nghệ thông tin",
+                            FullName = "Nguyễn Thị B_9",
+                            Gender = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER9@GMAIL.COM",
+                            NormalizedUserName = "USER9@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAENs8hB6LybNBRwuuiasJzAV/SJhZn5xu/G2J7bIGbOkCbrwZEHMKsXnssKsKIgn/Ww==",
+                            PhoneNumber = "0900000000",
+                            PhoneNumberConfirmed = false,
+                            PlaceOfBirth = "TP.HCM",
+                            SecurityStamp = "1a8c19b5-5995-4091-ac70-eb5d458445f3",
+                            TwoFactorEnabled = false,
+                            UserName = "user9@gmail.com"
                         });
                 });
 
@@ -331,11 +574,15 @@ namespace WebDeCuong.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
                     b.Property<float>("Proportion")
                         .HasColumnType("real");
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<string>("SubjectId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -352,19 +599,23 @@ namespace WebDeCuong.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CloName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Clo")
+                        .HasColumnType("int");
 
                     b.Property<string>("Method")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Proportion")
-                        .HasColumnType("real");
-
-                    b.Property<int>("SubjectId")
+                    b.Property<int>("Order")
                         .HasColumnType("int");
+
+                    b.Property<string>("Proportion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Target")
                         .IsRequired()
@@ -383,11 +634,8 @@ namespace WebDeCuong.Data.Migrations
 
             modelBuilder.Entity("WebDeCuong.Data.Entities.Subject", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("A")
                         .HasColumnType("nvarchar(max)");
@@ -418,6 +666,13 @@ namespace WebDeCuong.Data.Migrations
 
                     b.Property<int>("PracticeCredits")
                         .HasColumnType("int");
+
+                    b.Property<int>("SelfLearningCredits")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Teachers")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("TheoryCredits")
                         .HasColumnType("int");
@@ -456,8 +711,12 @@ namespace WebDeCuong.Data.Migrations
                     b.Property<int>("NLessons")
                         .HasColumnType("int");
 
-                    b.Property<int>("SubjectId")
+                    b.Property<int>("Order")
                         .HasColumnType("int");
+
+                    b.Property<string>("SubjectId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -474,9 +733,8 @@ namespace WebDeCuong.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CloName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Clo")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -486,8 +744,9 @@ namespace WebDeCuong.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<string>("SubjectId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -504,8 +763,9 @@ namespace WebDeCuong.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
+                    b.Property<string>("SubjectId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

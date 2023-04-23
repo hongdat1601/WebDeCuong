@@ -1,30 +1,28 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations;
-using WebDeCuong.Data.Entities;
+﻿
 
 namespace WebDeCuong.Api.Models
 {
 	public class SubjectModel
 	{
-        public string Name { get; set; } 
+        public string? Id { get; set; }
+
+        public required string Name { get; set; } 
 
         public int TheoryCredits { get; set; }
 
         public int PracticeCredits { get; set; }
 
-  
+        public int SelfLearningCredits { get; set; }
+
         public int TotalCredits { get; set; }
 
-   
+        public required string Teachers { get; set; }
+
         public string? Documents { get; set; }
 
-  
-        public string Goals { get; set; } = string.Empty;
-
+        public required string Goals { get; set; }
        
-        public string Abstract { get; set; } = string.Empty;
-
+        public required string Abstract { get; set; }
 
         public string? A { get; set; }
         public string? B { get; set; }
@@ -32,27 +30,10 @@ namespace WebDeCuong.Api.Models
 
         public string? Other { get; set; }
 
-        public List<string> CloName { get; set; } 
-        public List<string> OutputContent { get; set; } 
-        public List<string> SoPerPi { get; set; }
-
-        public List<string> Content { get; set; } 
-        public List<int> NLessons { get; set; }
-        public List<string> Clos { get; set; } 
-        public List<string> Method { get; set; }
-        public List<string>? Bonus { get; set; }
-
-        public List<string> EvaluateCloName { get; set; }
-        public List<string> Test { get; set; }
-        public List<string> EvaluateMethod { get; set; }
-        public List<float> EvalPropotion { get; set; }
-        public List<string> Target { get; set; }
-
-        public List<string> EvaluaElementName { get; set; }
-        public List<string> EvaluaElementMethod { get; set; }
-        public List<float> EvaluaElementPropotion { get; set; }
-
-        public List<string> UserId { get; set; } = null!;
+        public List<SubjectContentModel> SubjectContents { get; set; } = null!;
+        public List<SubjectOutputStandardModel> SubjectOutputStandards { get; set; } = null!;
+        public List<EvalElementModel> EvalElements { get; set; } = null!;
+        public List<EvaluateModel> Evaluates { get; set; } = null!;
     }
 }
 

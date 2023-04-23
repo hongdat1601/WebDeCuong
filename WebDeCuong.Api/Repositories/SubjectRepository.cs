@@ -1,92 +1,62 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
-using System.Security.Claims;
-using System.Text;
-using WebDeCuong.Api.Cons;
-using WebDeCuong.Api.Models;
+﻿using WebDeCuong.Api.Models;
 using WebDeCuong.Api.Repositories.Interfaces;
-using WebDeCuong.Data.Entities;
 using WebDeCuong.Data;
 using Microsoft.EntityFrameworkCore;
+using WebDeCuong.Api.Cons;
+using WebDeCuong.Data.Entities;
 
 namespace WebDeCuong.Api.Repositories
 {
 	public class SubjectRepository : ISubjectRepository
 	{
         private readonly ApplicationDbContext _context;
+
         public SubjectRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public List<SubjectModel> GetAllSubject()
+        public async Task<List<SubjectGetModel>> GetAllSubject()
         {
-            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).Include(x =>x.SubjectContents).Include(x => x.Evaluates).Include(x => x.EvalElements).ToList();
-            var subjectModels = subject.Select(s => new SubjectModel
+            var subjects = await _context.Subjects.ToListAsync();
+            var result = new List<SubjectGetModel>();
+
+            foreach (var item in subjects)
             {
+                SubjectGetModel subject = new SubjectGetModel
+                {
+                    Id = item.Id,
+                    Name = item.Name
+                };
 
-                Name = s.Name,
-                TheoryCredits = s.TheoryCredits,
-                PracticeCredits = s.PracticeCredits,
-                TotalCredits = s.TotalCredits,
-                Documents = s.Documents,
-                Goals = s.Goals,
-                Abstract = s.Abstract,
-                A = s.A,
-                B = s.B,
-                C = s.C,
-                Other = s.Other,
+                result.Add(subject);
+            }
 
-                UserId = s.SubjectUsers.Select(u => u.UserId).ToList(),
-
-                CloName = s.SubjectOutputStandards.Select(u => u.CloName).ToList(),
-                OutputContent = s.SubjectOutputStandards.Select(u => u.Content).ToList(),
-                SoPerPi = s.SubjectOutputStandards.Select(u => u.SoPerPi).ToList(),
-
-                Content = s.SubjectContents.Select(u => u.Content).ToList(),
-                Clos = s.SubjectContents.Select(u => u.Clos).ToList(),
-                NLessons = s.SubjectContents.Select(u => u.NLessons).ToList(),
-                Bonus = s.SubjectContents.Select(u => u.Bonus).ToList(),
-                Method = s.SubjectContents.Select(u => u.Method).ToList(),
-
-                EvaluateCloName = s.Evaluates.Select(u => u.CloName).ToList(),
-                EvalPropotion = s.Evaluates.Select(u=> u.Proportion).ToList(),
-                EvaluateMethod = s.Evaluates.Select(u => u.Method).ToList(),
-                Test = s.Evaluates.Select(u => u.Test).ToList(),
-                Target = s.Evaluates.Select( u=> u.Target).ToList(),
-
-                EvaluaElementName = s.EvalElements.Select(u => u.Name).ToList(),
-                EvaluaElementMethod = s.EvalElements.Select(u=> u.Method).ToList(),
-                EvaluaElementPropotion = s.EvalElements.Select(u => u.Proportion).ToList(),
-            }) ;
-        
-
-            return subjectModels.ToList();
+            return result;
         }
 
-        public async Task<ResponseModel> AddSubject(SubjectModel subject)
+        public async Task<ResponseModel> GetSubject(string Id)
         {
-            var responseModel = new ResponseModel();
-            foreach (var userId in subject.UserId)
+            var resModel = new ResponseModel();
+            var subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id.CompareTo(Id) == 0);
+
+            if (subject == null)
             {
-                var user = await _context.Users.FindAsync(userId);
-                if (user == null)
-                {
-                    responseModel.Status = Status.Error;
-                    responseModel.Message = "Id User not found";
-                    return responseModel;
-                }
+                resModel.Status = Status.Error;
+                resModel.Message = "Subject Not Found";
+
+                return resModel;
             }
-            var _subject = new Subject()
+
+            var result = new SubjectModel
             {
+                Id = Id,
                 Name = subject.Name,
                 TheoryCredits = subject.TheoryCredits,
                 PracticeCredits = subject.PracticeCredits,
+                SelfLearningCredits = subject.SelfLearningCredits,
                 TotalCredits = subject.TotalCredits,
+                Teachers = subject.Teachers,
                 Documents = subject.Documents,
                 Goals = subject.Goals,
                 Abstract = subject.Abstract,
@@ -94,264 +64,316 @@ namespace WebDeCuong.Api.Repositories
                 B = subject.B,
                 C = subject.C,
                 Other = subject.Other,
+                SubjectContents = new List<SubjectContentModel>(),
+                SubjectOutputStandards = new List<SubjectOutputStandardModel>(),
+                EvalElements = new List<EvalElementModel>(),
+                Evaluates = new List<EvaluateModel>(),
             };
-            await _context.Subjects.AddAsync(_subject);
-           
-            var result = await _context.SaveChangesAsync();
-            if (result == 0)
-            {
-                responseModel.Status = Status.Success;
-                responseModel.Message = "Subject create succesfully";
 
-                return responseModel;
-
-            }
-
-            foreach (var userId in subject.UserId)
-            {
-                var subjectUser = new SubjectUser
+            await _context.SubjectOutputStandards
+                .Where(so => so.SubjectId.CompareTo(Id) == 0)
+                .OrderBy(so => so.Clo)
+                .ForEachAsync(so =>
                 {
-                    SubjectId = _subject.Id,
-                    UserId = userId
-                };
-                await _context.SubjectUsers.AddAsync(subjectUser);
-            }
-            foreach (var cloname in subject.CloName)
-            {
-                var subjectoutput = new SubjectOutputStandard
-                {
-                    CloName = cloname,
-                    Content = subject.OutputContent[subject.CloName.IndexOf(cloname)],
-                    SoPerPi = subject.SoPerPi[subject.CloName.IndexOf(cloname)],
-                    SubjectId = _subject.Id
-                };
-                await _context.SubjectOutputStandards.AddAsync(subjectoutput);
-            }
-            foreach (var content in subject.Content)
-            {
-                var subjectContent = new SubjectContent
-                {
-                   
-                    Clos = subject.Clos[subject.Content.IndexOf(content)],
-                    Content = content,
-                    Method  = subject.Method[subject.Content.IndexOf(content)],
-                    NLessons = subject.NLessons[subject.Content.IndexOf(content)],
-                    Bonus = subject.Bonus[subject.Content.IndexOf(content)],
-                    SubjectId = _subject.Id
-                };
-                await _context.SubjectContents.AddAsync(subjectContent);
-            }
+                    result.SubjectOutputStandards.Add(new SubjectOutputStandardModel
+                    {
+                        Id = so.Id,
+                        Clo = so.Clo,
+                        Content = so.Content,
+                        SoPerPi = so.SoPerPi
+                    });
+                });
 
-            foreach (var cloname in subject.EvaluateCloName)
-            {
-                var evaluate = new Evaluate
+            await _context.SubjectContents
+                .Where(sc => sc.SubjectId.CompareTo(Id) == 0)
+                .OrderBy(sc => sc.Order)
+                .ForEachAsync(sc =>
                 {
-                    CloName = cloname,
-                    Target = subject.Target[subject.EvaluateCloName.IndexOf(cloname)],
-                    Method = subject.Method[subject.EvaluateCloName.IndexOf(cloname)],
-                    Proportion = subject.EvalPropotion[subject.EvaluateCloName.IndexOf(cloname)],
-                    Test = subject.Test[subject.EvaluateCloName.IndexOf(cloname)],
-                    SubjectId = _subject.Id
-                };
-                await _context.Evaluates.AddAsync(evaluate);
-            }
+                    result.SubjectContents.Add(new SubjectContentModel
+                    {
+                        Id = sc.Id,
+                        Clos = sc.Clos,
+                        Content = sc.Content,
+                        Method = sc.Method,
+                        Bonus = sc.Bonus,
+                        NLessons = sc.NLessons,
+                        Order = sc.Order
+                    });
+                });
 
-            foreach (var name in subject.EvaluaElementName)
-            {
-                var evalElement = new EvalElement
+            await _context.Evaluates
+                .Where(e => e.SubjectId.CompareTo(Id) == 0)
+                .OrderBy(e => e.Order)
+                .ForEachAsync(e =>
                 {
+                    result.Evaluates.Add(new EvaluateModel
+                    {
+                        Id = e.Id,
+                        Method = e.Method,
+                        Test = e.Test,
+                        Order = e.Order,
+                        Clo = e.Clo,
+                        Proportion = e.Proportion,
+                        Target = e.Target
+                    });
+                });
 
-                    Name = name, 
-                    Method = subject.EvaluaElementMethod[subject.EvaluaElementName.IndexOf(name)],
-                    Proportion = subject.EvaluaElementPropotion[subject.EvaluaElementName.IndexOf(name)],
-                    SubjectId = _subject.Id
-                };
-                await _context.EvalElements.AddAsync(evalElement);
-            }
-            await _context.SaveChangesAsync();
-            responseModel.Status = Status.Success;
-            responseModel.Message = "Subject create succesfully";
+            await _context.EvalElements
+                .Where(ee => ee.SubjectId.CompareTo(Id) == 0)
+                .OrderBy(ee => ee.Order)
+                .ForEachAsync(ee =>
+                {
+                    result.EvalElements.Add(new EvalElementModel
+                    {
+                        Id = ee.Id,
+                        Method = ee.Method,
+                        Name = ee.Name,
+                        Order = ee.Order,
+                        Proportion = ee.Proportion
+                    });
+                });
 
-            return responseModel;
+            resModel.Status = Status.Success;
+            resModel.Result = result;
+
+            return resModel;
         }
 
-        public SubjectModel GetById(int id)
+        public async Task<ResponseModel> AddSubject(SubjectModel subject)
         {
-            var subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x=>x.SubjectOutputStandards).Include(x =>x.SubjectContents).Include(x =>x.Evaluates).Include(x=>x.EvalElements).SingleOrDefault(x=> x.Id == id);
-            if (subject != null)
+            var resModel = new ResponseModel();
+            var subjectExist = await _context.Subjects.FirstOrDefaultAsync(s => s.Id.CompareTo(subject.Id) == 0);
+
+            if (subjectExist != null) 
             {
-                return new SubjectModel
-                {
-
-                    Name = subject.Name,
-                    TheoryCredits = subject.TheoryCredits,
-                    PracticeCredits = subject.PracticeCredits,
-                    TotalCredits = subject.TotalCredits,
-                    Documents = subject.Documents,
-                    Goals = subject.Goals,
-                    Abstract = subject.Abstract,
-                    A = subject.A,
-                    B = subject.B,
-                    C = subject.C,
-                    Other = subject.Other,
-                    UserId = subject.SubjectUsers.Select(u => u.UserId).ToList(),
-                    CloName = subject.SubjectOutputStandards.Select(u => u.CloName).ToList(),
-                    OutputContent = subject.SubjectOutputStandards.Select(u => u.Content).ToList(),
-                    SoPerPi = subject.SubjectOutputStandards.Select(u => u.SoPerPi).ToList(),
-
-                    Content = subject.SubjectContents.Select(u => u.Content).ToList(),
-                    Clos = subject.SubjectContents.Select(u => u.Clos).ToList(),
-                    Method = subject.SubjectContents.Select(u => u.Method).ToList(),
-                    NLessons = subject.SubjectContents.Select(u => u.NLessons).ToList(),
-                    Bonus = subject.SubjectContents.Select(u => u.Bonus).ToList(),
-
-                    EvaluateCloName = subject.Evaluates.Select(u => u.CloName).ToList(),
-                    EvalPropotion = subject.Evaluates.Select(u => u.Proportion).ToList(),
-                    EvaluateMethod = subject.Evaluates.Select(u => u.Method).ToList(),
-                    Test = subject.Evaluates.Select(u => u.Test).ToList(),
-                    Target = subject.Evaluates.Select(u => u.Target).ToList(),
-
-                    EvaluaElementName = subject.EvalElements.Select(u => u.Name).ToList(),
-                    EvaluaElementMethod = subject.EvalElements.Select(u => u.Method).ToList(),
-                    EvaluaElementPropotion = subject.EvalElements.Select(u => u.Proportion).ToList(),
-                };
+                resModel.Status = Status.Error;
+                resModel.Message = "Subject already exists.";
+                return resModel;
             }
-            return null;
-                 
+
+            string Id = $"{await _context.Subjects.CountAsync() + 1}".PadLeft(7, '0');
+
+            await _context.Subjects.AddAsync(new Subject 
+            {
+                Id = Id,
+                Name = subject.Name,
+                TheoryCredits = subject.TheoryCredits,
+                PracticeCredits = subject.PracticeCredits,
+                SelfLearningCredits = subject.SelfLearningCredits,
+                TotalCredits = subject.TotalCredits,
+                Teachers = subject.Teachers,
+                Documents = subject.Documents,
+                Goals = subject.Goals,
+                Abstract = subject.Abstract,
+                A = subject.A,
+                B = subject.B,
+                C = subject.C,
+                Other = subject.Other
+            });
+
+            foreach (var output in subject.SubjectOutputStandards)
+            {
+                _context.SubjectOutputStandards.AddRange(new SubjectOutputStandard
+                {
+                    SubjectId = Id,
+                    Clo = output.Clo,
+                    Content = output.Content,
+                    SoPerPi = output.SoPerPi,
+                });
+            }
+
+            foreach (var output in subject.SubjectContents)
+            {
+                _context.SubjectContents.AddRange(new SubjectContent
+                {
+                    SubjectId = Id,
+                    Content = output.Content,
+                    Bonus = output.Bonus,
+                    Clos = output.Clos,
+                    Method = output.Method,
+                    NLessons = output.NLessons,
+                    Order = output.Order,       
+                });
+            }
+
+            foreach (var output in subject.EvalElements)
+            {
+                _context.EvalElements.AddRange(new EvalElement
+                {
+                    SubjectId = Id,
+                    Method = output.Method,
+                    Name = output.Name,
+                    Order = output.Order,
+                    Proportion = output.Proportion,
+                });
+            }
+
+            foreach (var output in subject.Evaluates)
+            {
+                _context.Evaluates.AddRange(new Evaluate
+                {
+                    SubjectId = Id,
+                    Proportion = output.Proportion,
+                    Order = output.Order,
+                    Method = output.Method,
+                    Clo = output.Clo,
+                    Target = output.Target,
+                    Test = output.Test
+                });
+            }
+            var res = await _context.SaveChangesAsync();
+
+            if (res == 0)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "Subject can not create.";
+                return resModel;
+            }
+
+            resModel.Status = Status.Success;
+            resModel.Message = "Subject was created successfull.";
+            return resModel;
         }
 
-        public async Task<ResponseModel> UpdateSubject(SubjectModel subject, int id)
+        public async Task<ResponseModel> UpdateSubject(SubjectModel subject)
+        {
+            var resModel = new ResponseModel();
+            var subjectUpdate = await _context.Subjects.FirstOrDefaultAsync(s => s.Id.CompareTo(subject.Id) == 0);
+
+            if (subjectUpdate == null)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "Subject not found.";
+                return resModel;
+            }
+
+            subjectUpdate.Name = subject.Name;
+            subjectUpdate.TheoryCredits = subject.TheoryCredits;
+            subjectUpdate.PracticeCredits = subject.PracticeCredits;
+            subjectUpdate.SelfLearningCredits = subject.SelfLearningCredits;
+            subjectUpdate.TotalCredits = subject.TotalCredits;
+            subjectUpdate.Teachers = subject.Teachers;
+            subjectUpdate.Documents = subject.Documents;
+            subjectUpdate.Goals = subject.Goals;
+            subjectUpdate.Abstract = subject.Abstract;
+            subjectUpdate.A = subject.A;
+            subjectUpdate.B = subject.B;
+            subjectUpdate.C = subject.C;
+            subjectUpdate.Other = subject.Other;
+
+            // delete child
+            _context.SubjectOutputStandards
+                .RemoveRange(_context.SubjectOutputStandards
+                    .Where(so => so.SubjectId.CompareTo(subjectUpdate.Id) == 0));
+
+            _context.SubjectContents
+                .RemoveRange(_context.SubjectContents
+                    .Where(so => so.SubjectId.CompareTo(subjectUpdate.Id) == 0));
+
+            _context.EvalElements
+                .RemoveRange(_context.EvalElements
+                    .Where(so => so.SubjectId.CompareTo(subjectUpdate.Id) == 0));
+
+            _context.Evaluates
+                .RemoveRange(_context.Evaluates
+                    .Where(so => so.SubjectId.CompareTo(subjectUpdate.Id) == 0));
+
+            // add child
+            foreach (var output in subject.SubjectOutputStandards)
+            {
+                _context.SubjectOutputStandards.AddRange(new SubjectOutputStandard
+                {
+                    SubjectId = subjectUpdate.Id,
+                    Clo = output.Clo,
+                    Content = output.Content,
+                    SoPerPi = output.SoPerPi,
+                });
+            }
+
+            foreach (var output in subject.SubjectContents)
+            {
+                _context.SubjectContents.AddRange(new SubjectContent
+                {
+                    SubjectId = subjectUpdate.Id,
+                    Content = output.Content,
+                    Bonus = output.Bonus,
+                    Clos = output.Clos,
+                    Method = output.Method,
+                    NLessons = output.NLessons,
+                    Order = output.Order,
+                });
+            }
+
+            foreach (var output in subject.EvalElements)
+            {
+                _context.EvalElements.AddRange(new EvalElement
+                {
+                    SubjectId = subjectUpdate.Id,
+                    Method = output.Method,
+                    Name = output.Name,
+                    Order = output.Order,
+                    Proportion = output.Proportion,
+                });
+            }
+
+            foreach (var output in subject.Evaluates)
+            {
+                _context.Evaluates.AddRange(new Evaluate
+                {
+                    SubjectId = subjectUpdate.Id,
+                    Proportion = output.Proportion,
+                    Order = output.Order,
+                    Method = output.Method,
+                    Clo = output.Clo,
+                    Target = output.Target,
+                    Test = output.Test
+                });
+            }
+
+            _context.Subjects.Update(subjectUpdate);
+            var res = await _context.SaveChangesAsync();
+
+            if (res == 0)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "Subject can not update.";
+                return resModel;
+            }
+
+            resModel.Status = Status.Success;
+            resModel.Message = "Subject was updated successfull.";
+            return resModel;
+        }
+
+        public async Task<ResponseModel> DeleteSubject(string Id)
         {
             var responseModel = new ResponseModel();
-            foreach (var userId in subject.UserId)
-            {
-                var user = await _context.Users.FindAsync(userId);
-                if (user == null)
-                {
-                    responseModel.Status = Status.Error;
-                    responseModel.Message = "Id User not found";
-                    return responseModel;
-                }
-            }
-            var _subject = _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectOutputStandards).Include(x => x.SubjectContents).Include(x => x.Evaluates).Include(x => x.EvalElements).SingleOrDefault(x => x.Id == id);
+            var _subject = await _context.Subjects.FirstOrDefaultAsync(s => s.Id.CompareTo(Id) == 0);
+
             if (_subject != null)
-            {
-                _subject.Name = subject.Name;
-                _subject.TheoryCredits = subject.TheoryCredits;
-                _subject.PracticeCredits = subject.PracticeCredits;
-                _subject.TotalCredits = subject.TotalCredits;
-                _subject.Documents = subject.Documents;
-                _subject.Goals = subject.Goals;
-                _subject.Abstract = subject.Abstract;
-                _subject.A = subject.A;
-                _subject.B = subject.B;
-                _subject.C = subject.C;
-                _subject.Other = subject.Other;
-                _subject.SubjectUsers.Clear();
-                foreach (var userId in subject.UserId)
-                {
-                    var subjectuser = new SubjectUser
-                    {
-                        UserId = userId,  
-                        SubjectId = _subject.Id
-                    };
-                    await _context.SubjectUsers.AddAsync(subjectuser);
-                }
-                _subject.SubjectOutputStandards.Clear();
-                foreach (var cloname in subject.CloName)
-                {
-                    var subjectoutput = new SubjectOutputStandard
-                    {
-                        CloName = cloname,
-                        Content = subject.OutputContent[subject.CloName.IndexOf(cloname)],
-                        SoPerPi = subject.SoPerPi[subject.CloName.IndexOf(cloname)],
-                        SubjectId = _subject.Id
-                    };
-                    await _context.SubjectOutputStandards.AddAsync(subjectoutput);
-                }
-                _subject.SubjectContents.Clear();
-                foreach (var content in subject.Content)
-                {
-                    var subjectContent = new SubjectContent
-                    {
-
-                        Clos = subject.Clos[subject.Content.IndexOf(content)],
-                        Content = content,
-                        Method = subject.Method[subject.Content.IndexOf(content)],
-                        NLessons = subject.NLessons[subject.Content.IndexOf(content)],
-                        Bonus = subject.Bonus[subject.Content.IndexOf(content)],
-                        SubjectId = _subject.Id
-                    };
-                    await _context.SubjectContents.AddAsync(subjectContent);
-                }
-                _subject.Evaluates.Clear();
-                foreach (var cloname in subject.EvaluateCloName)
-                {
-                    var evaluate = new Evaluate
-                    {
-
-                        CloName = cloname,
-                        Target = subject.Target[subject.EvaluateCloName.IndexOf(cloname)],
-                        Method = subject.Method[subject.EvaluateCloName.IndexOf(cloname)],
-                        Proportion = subject.EvalPropotion[subject.EvaluateCloName.IndexOf(cloname)],
-                        Test = subject.Test[subject.EvaluateCloName.IndexOf(cloname)],
-                        SubjectId = _subject.Id
-                    };
-                    await _context.Evaluates.AddAsync(evaluate);
-                }
-                _subject.EvalElements.Clear();
-                foreach (var name in subject.EvaluaElementName)
-                {
-                    var evalElement = new EvalElement
-                    {
-
-                        Name = name,
-                        Method = subject.EvaluaElementMethod[subject.EvaluaElementName.IndexOf(name)],
-                        Proportion = subject.EvaluaElementPropotion[subject.EvaluateCloName.IndexOf(name)],
-                        SubjectId = _subject.Id
-                    };
-                    await _context.EvalElements.AddAsync(evalElement);
-                }
-                await _context.SaveChangesAsync();
-                responseModel.Status = Status.Success;
-                responseModel.Message = "Update Succesfully";
-                return responseModel;
-            }
-            responseModel.Status = Status.Error;
-            responseModel.Message = "Update Failed";
-            return responseModel;
-
-
-        }
-
-        public async Task<ResponseModel> DeleteSubject(int id)
-        {
-            var responseModel = new ResponseModel();
-            var _subject = await _context.Subjects.Include(x => x.SubjectUsers).Include(x => x.SubjectContents).Include(x => x.SubjectOutputStandards).Include(x => x.Evaluates).Include(x => x.EvalElements).SingleOrDefaultAsync(x => x.Id == id);
-            if(_subject != null)
             {
                 _context.Subjects.Remove(_subject);
                 var result = await _context.SaveChangesAsync();
-                if(result == 0)
+                if (result == 0)
                 {
-                    responseModel.Status = Status.Success;
-                    responseModel.Message = "";
+                    responseModel.Status = Status.Error;
+                    responseModel.Message = "Something went wrong.";
 
                     return responseModel;
                 }
                 else
                 {
                     responseModel.Status = Status.Success;
-                    responseModel.Message = "Subject  succesfully";
+                    responseModel.Message = "Subject was deleted succesfully";
 
                     return responseModel;
-                }    
+                }
             }
-            responseModel.Status = Status.Success;
-            responseModel.Message = "Id Subject not found";
+            responseModel.Status = Status.Error;
+            responseModel.Message = "Subject not found";
 
             return responseModel;
-             
+
         }
     }
 }

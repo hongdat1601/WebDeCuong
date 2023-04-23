@@ -11,7 +11,7 @@ namespace WebDeCuong.Data.Entities
     public class Subject
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         [Required]
         public string Name { get; set; } = string.Empty;
@@ -23,7 +23,13 @@ namespace WebDeCuong.Data.Entities
         public int PracticeCredits { get; set; }
 
         [Required]
+        public int SelfLearningCredits { get; set; }
+
+        [Required]
         public int TotalCredits { get; set; }
+
+        [Column(TypeName = "text")]
+        public string Teachers { get; set; } = string.Empty;
 
         [Column(TypeName = "text")]
         public string? Documents { get; set; }

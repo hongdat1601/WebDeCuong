@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using WebDeCuong.Data.Entities;
-using WebDeCuong.Data;
-using Microsoft.EntityFrameworkCore;
-using WebDeCuong.Api.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebDeCuong.Api.Repositories.Interfaces;
-using WebDeCuong.Api.Repositories;
 using WebDeCuong.Api.Cons;
+using Microsoft.AspNetCore.Authorization;
+using WebDeCuong.Api.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,6 +10,7 @@ namespace WebDeCuong.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SubjectController : ControllerBase
     {
         // GET: api/values
@@ -29,11 +22,29 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                return Ok(_subjectRepository.GetAllSubject());
+                return Ok(await _subjectRepository.GetAllSubject());
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetSubjectById([FromQuery] string id)
+        {
+            try
+            {
+                var res = await _subjectRepository.GetSubject(id);
+                if (res.Status.CompareTo(Status.Success) == 0)
+                {
+                    return Ok(res);
+                }
+                return BadRequest(res.Message);
             }
             catch
             {
@@ -42,51 +53,36 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] SubjectModel subject)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([FromBody] SubjectModel subject)
         {
             var result = await _subjectRepository.AddSubject(subject);
 
             if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
-            return Ok(result);
+                return BadRequest(result.Message);
+            return Ok(result.Message);
 
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetSubjectById(int id)
+        [HttpPut()]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateSubject([FromBody] SubjectModel subject)
         {
-            try {
-
-                var subject = _subjectRepository.GetById(id);
-                if (subject != null)
-                {
-                    return Ok(subject);
-                }
-                return NotFound();
-
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSubject([FromForm] SubjectModel subject, int id)
-        {
-            var result = await _subjectRepository.UpdateSubject(subject,id);
+            var result = await _subjectRepository.UpdateSubject(subject);
 
             if (result.Status.CompareTo(Status.Error) == 0)
-                return BadRequest(result);
-            return Ok(result);
+                return BadRequest(result.Message);
+            return Ok(result.Message);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSubject(int id)
+        [HttpDelete]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteSubject([FromQuery] string Id)
         {
-            var result = await _subjectRepository.DeleteSubject(id);
+            var result = await _subjectRepository.DeleteSubject(Id);
             if (result.Status.CompareTo(Status.Error) == 0)
             {
-                return BadRequest(result);
+                return BadRequest(result.Message);
             }
             return Ok(result);
         }

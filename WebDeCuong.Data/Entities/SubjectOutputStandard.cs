@@ -14,7 +14,7 @@ namespace WebDeCuong.Data.Entities
         public int Id { get; set; }
 
         [Required]
-        public string CloName { get; set; } = string.Empty;
+        public int Clo { get; set; }
 
         [Required]
         public string Content { get; set; } = string.Empty;
@@ -23,7 +23,7 @@ namespace WebDeCuong.Data.Entities
         public string SoPerPi { get; set; } = string.Empty;
 
         [Required]
-        public int SubjectId { get; set; }
+        public string SubjectId { get; set; } = string.Empty;
         public Subject Subject { get; set; } = null!;
     }
 }

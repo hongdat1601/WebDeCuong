@@ -17,7 +17,7 @@ namespace WebDeCuong.Data.Entities
         public ApplicationUser User { get; set; } = null!;
 
         [Required]
-        public int SubjectId { get; set; }
+        public string SubjectId { get; set; } = string.Empty;
         public Subject Subject { get; set; } = null!;
     }
 }

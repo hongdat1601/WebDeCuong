@@ -13,6 +13,9 @@ namespace WebDeCuong.Data.Entities
         public int Id { get; set; }
 
         [Required]
+        public int Order { get; set; }
+
+        [Required]
         public string Content { get; set; } = string.Empty;
 
         [Required]
@@ -27,7 +30,7 @@ namespace WebDeCuong.Data.Entities
         public string? Bonus { get; set; }
 
         [Required]
-        public int SubjectId { get; set; }
+        public string SubjectId { get; set; } = string.Empty;
         public Subject Subject { get; set; } = null!;
 
     }
