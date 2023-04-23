@@ -84,7 +84,7 @@ namespace WebDeCuong.Api.Controllers
             {
                 return BadRequest(result.Message);
             }
-            return Ok(result);
+            return Ok(result.Message);
         }
         
     }   
