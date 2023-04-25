@@ -55,5 +55,6 @@ namespace WebDeCuong.Data.Entities
         public ICollection<SubjectContent> SubjectContents { get; set; } = null!;
         public ICollection<SubjectOutputStandard> SubjectOutputStandards { get; set; } = null!;
         public ICollection<SubjectUser> SubjectUsers { get; set; } = null!;
-    }
+        public ICollection<SubjectCurriculum> SubjectCurriculum { get; set; } = null!;
+     }
 }

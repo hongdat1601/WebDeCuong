@@ -55,7 +55,7 @@ builder.Services.AddCors(options =>
 
 // Add EF Core DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("test")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("test1")));
 
 // Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -88,6 +88,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+builder.Services.AddScoped<ICurriculumRepository, CurriculumRepository>();
 // Add Services
 builder.Services.AddHttpContextAccessor();
 

@@ -32,6 +32,10 @@ namespace WebDeCuong.Data.Configurations
             builder.HasMany(s => s.SubjectUsers)
                 .WithOne(su => su.Subject)
                 .HasForeignKey(su => su.SubjectId);
+
+            builder.HasMany(s => s.SubjectCurriculum)
+                .WithOne(scs => scs.Subject)
+                .HasForeignKey(scs => scs.SubjectId);
         }
     }
 }
