@@ -55,7 +55,7 @@ builder.Services.AddCors(options =>
 
 // Add EF Core DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("test1")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("test")));
 
 // Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>

@@ -27,11 +27,12 @@ namespace WebDeCuong.Api.Repositories
                 resModel.Message = "curriculum already exists.";
                 return resModel;
             }
+
             foreach (var subjectcurriculum in curriculum.subjectCurriculumModels)
             {
                 foreach (var subject in subjectcurriculum.SubjectId)
                 {
-                    var _subjectId = _context.SubjectCurriculums.FirstOrDefault(s => s.SubjectId.CompareTo(subject) == 0);
+                    var _subjectId = _context.Subjects.FirstOrDefault(s => s.Id.CompareTo(subject) == 0);
                     if(_subjectId== null)
                     {
                         resModel.Status = Status.Error;
@@ -42,7 +43,6 @@ namespace WebDeCuong.Api.Repositories
 
             }
 
-
             var _curriculum = new Curriculum()
             {
                 Name = curriculum.Name
@@ -52,12 +52,12 @@ namespace WebDeCuong.Api.Repositories
 
             foreach (var subjectcurriculum in curriculum.subjectCurriculumModels)
             {
-                var _semester = _context.Semesters.FirstOrDefault(s => s.Name.CompareTo(subjectcurriculum.name) == 0);
+                var _semester = _context.Semesters.FirstOrDefault(s => s.Name.CompareTo(subjectcurriculum.SemesterName) == 0);
                 if (_semester == null)
                 {
                     _semester = new Semester()
                     {
-                        Name = subjectcurriculum.name
+                        Name = subjectcurriculum.SemesterName
                     };
                     await _context.Semesters.AddAsync(_semester);
                     await _context.SaveChangesAsync();
@@ -67,7 +67,7 @@ namespace WebDeCuong.Api.Repositories
 
                 foreach (var subject in subjectcurriculum.SubjectId)
                 {
-                    _context.SubjectCurriculums.AddRange(new SubjectCurriculum
+                    _context.SubjectCurriculums.Add(new SubjectCurriculum
                     {
                         SubjectId = subject,
                         SemesterId = _semester.Id,
@@ -140,7 +140,7 @@ namespace WebDeCuong.Api.Repositories
                     var subjectids = subjectcurriculum.Where(s => s.SemesterId == semester.Id).ToList();
                     SubjectCurriculumModel subjectCurriculum = new SubjectCurriculumModel
                     {
-                        name = semester.Name,
+                        SemesterName = semester.Name,
                         SubjectId = new List<string>()
                     };
                     foreach(var subject in subjectids)
@@ -180,7 +180,7 @@ namespace WebDeCuong.Api.Repositories
                 var subjectids = subjectcurriculum.Where(s => s.SemesterId == semester.Id).ToList();
                 SubjectCurriculumModel subjectCurriculum = new SubjectCurriculumModel
                 {
-                    name = semester.Name,
+                    SemesterName = semester.Name,
                     SubjectId = new List<string>()
                 };
                 foreach (var subject in subjectids)
@@ -202,7 +202,7 @@ namespace WebDeCuong.Api.Repositories
             {
                 foreach (var subject in subjectcurriculum.SubjectId)
                 {
-                    var _subjectId = _context.SubjectCurriculums.FirstOrDefault(s => s.SubjectId.CompareTo(subject) == 0);
+                    var _subjectId = _context.Subjects.FirstOrDefault(s => s.Id.CompareTo(subject) == 0);
                     if (_subjectId == null)
                     {
                         resModel.Status = Status.Error;
@@ -223,12 +223,12 @@ namespace WebDeCuong.Api.Repositories
             _context.SubjectCurriculums.RemoveRange(_context.SubjectCurriculums.Where(c => c.CurriculumId == curriculum.Id));
             foreach (var subjectcurriculum in curriculum.subjectCurriculumModels)
             {
-                var _semester = _context.Semesters.FirstOrDefault(s => s.Name.CompareTo(subjectcurriculum.name) == 0);
+                var _semester = _context.Semesters.FirstOrDefault(s => s.Name.CompareTo(subjectcurriculum.SemesterName) == 0);
                 if (_semester == null)
                 {
                     _semester = new Semester()
                     {
-                        Name = subjectcurriculum.name
+                        Name = subjectcurriculum.SemesterName
                     };
                     await _context.Semesters.AddAsync(_semester);
                     await _context.SaveChangesAsync();

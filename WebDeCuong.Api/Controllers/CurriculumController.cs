@@ -4,6 +4,7 @@ using WebDeCuong.Api.Cons;
 using Microsoft.AspNetCore.Authorization;
 using WebDeCuong.Api.Models;
 using WebDeCuong.Api.Repositories;
+using System.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,6 +12,7 @@ namespace WebDeCuong.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CurriculumController : ControllerBase
     {
         private readonly ICurriculumRepository _curriculumRepository;
@@ -19,6 +21,7 @@ namespace WebDeCuong.Api.Controllers
         {
             _curriculumRepository = curriculumRepository;
         }
+
         // GET: api/values
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -34,8 +37,8 @@ namespace WebDeCuong.Api.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetSubjectById(int id)
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetSubjectById([FromQuery] int id)
         {
             try
             {
@@ -54,6 +57,7 @@ namespace WebDeCuong.Api.Controllers
 
         // POST api/values
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CurriculumModel curriculum)
         {
             var result = await _curriculumRepository.AddCurriculum(curriculum);
@@ -65,7 +69,8 @@ namespace WebDeCuong.Api.Controllers
         }
 
         // PUT api/values/5
-        [HttpPut()]
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CurriculumUupdate([FromBody] CurriculumModel curriculum)
         {
             var result = await _curriculumRepository.UpdateCurriculum(curriculum);
@@ -76,8 +81,9 @@ namespace WebDeCuong.Api.Controllers
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete( int id)
+        [HttpDelete]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete([FromQuery] int id)
         {
             var result = await _curriculumRepository.DeleteCurriculum(id);
             if (result.Status.CompareTo(Status.Error) == 0)
