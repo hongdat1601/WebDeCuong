@@ -379,6 +379,19 @@ namespace WebDeCuong.Api.Repositories
 
         public async Task<ResponseModel> RequestSubject(RequestSubjectModel subject)
         {
+            var resModel = new ResponseModel();
+
+            var user = await _context.Users.
+                FirstOrDefaultAsync(u => u.Email!.CompareTo(subject.RequestUserMail) == 0);
+
+            if (user == null)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "User not found.";
+                return resModel;
+            }
+
+
             var lastSubject = await _context.Subjects.OrderByDescending((s) => s.Id).ToListAsync();
             int id = 0;
             if (lastSubject.Count > 0)
@@ -392,8 +405,6 @@ namespace WebDeCuong.Api.Repositories
                 Name = subject.Name,
                 RequestUserMail = subject.RequestUserMail,
             };
-
-            var resModel = new ResponseModel();
 
             await _context.Subjects.AddAsync(subjects);
             var response = await _context.SaveChangesAsync();
