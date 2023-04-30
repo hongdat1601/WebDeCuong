@@ -80,8 +80,12 @@ namespace WebDeCuong.Api.Repositories
 
             if (res == 0)
             {
+                _context.Curriculums.Remove(_curriculum);
+                await _context.SaveChangesAsync();
+
                 resModel.Status = Status.Error;
                 resModel.Message = "Curriculum can not create.";
+
                 return resModel;
             }
 

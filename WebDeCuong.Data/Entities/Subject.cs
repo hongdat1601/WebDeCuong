@@ -50,6 +50,8 @@ namespace WebDeCuong.Data.Entities
         [Column(TypeName = "text")]
         public string? Other { get; set; }
 
+        public string? RequestUserMail { get; set; }
+
         public ICollection<EvalElement> EvalElements { get; set; } = null!;
         public ICollection<Evaluate> Evaluates { get; set; } = null!;
         public ICollection<SubjectContent> SubjectContents { get; set; } = null!;

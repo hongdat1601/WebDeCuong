@@ -21,6 +21,19 @@ namespace WebDeCuong.Api.Controllers
             _subjectRepository = subjectRepository;
         }
 
+        [HttpPost("Request")]
+        public async Task<IActionResult> RequestSubject([FromBody] RequestSubjectModel subject)
+        {
+            var res = await _subjectRepository.RequestSubject(subject);
+
+            if (res.Status.CompareTo(Status.Error) != 0)
+            {
+                return BadRequest(res.Message);
+            }
+
+            return Ok(res.Message);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

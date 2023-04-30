@@ -30,6 +30,8 @@ namespace WebDeCuong.Api.Models
 
         public string? Other { get; set; }
 
+        public string? RequestUserMail { get; set; }
+
         public List<SubjectContentModel> SubjectContents { get; set; } = null!;
         public List<SubjectOutputStandardModel> SubjectOutputStandards { get; set; } = null!;
         public List<EvalElementModel> EvalElements { get; set; } = null!;

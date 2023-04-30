@@ -36,6 +36,8 @@ namespace WebDeCuong.Data.Configurations
             builder.HasMany(s => s.SubjectCurriculum)
                 .WithOne(scs => scs.Subject)
                 .HasForeignKey(scs => scs.SubjectId);
+
+            builder.HasIndex(s => s.Name).IsUnique();
         }
     }
 }

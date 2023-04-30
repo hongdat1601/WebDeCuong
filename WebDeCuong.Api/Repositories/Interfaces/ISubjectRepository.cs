@@ -12,7 +12,7 @@ namespace WebDeCuong.Api.Repositories.Interfaces
         Task<ResponseModel> UpdateSubject(SubjectModel subject);
         Task<ResponseModel> DeleteSubject(string Id);
 
-   
+        Task<ResponseModel> RequestSubject(RequestSubjectModel subject);
     }
 }
 

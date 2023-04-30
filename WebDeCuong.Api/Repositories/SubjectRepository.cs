@@ -7,8 +7,8 @@ using WebDeCuong.Data.Entities;
 
 namespace WebDeCuong.Api.Repositories
 {
-	public class SubjectRepository : ISubjectRepository
-	{
+    public class SubjectRepository : ISubjectRepository
+    {
         private readonly ApplicationDbContext _context;
 
         public SubjectRepository(ApplicationDbContext context)
@@ -68,6 +68,7 @@ namespace WebDeCuong.Api.Repositories
                 SubjectOutputStandards = new List<SubjectOutputStandardModel>(),
                 EvalElements = new List<EvalElementModel>(),
                 Evaluates = new List<EvaluateModel>(),
+                RequestUserMail = subject.RequestUserMail,
             };
 
             await _context.SubjectOutputStandards
@@ -144,7 +145,7 @@ namespace WebDeCuong.Api.Repositories
             var resModel = new ResponseModel();
             var subjectExist = await _context.Subjects.FirstOrDefaultAsync(s => s.Id.CompareTo(subject.Id) == 0);
 
-            if (subjectExist != null) 
+            if (subjectExist != null)
             {
                 resModel.Status = Status.Error;
                 resModel.Message = "Subject already exists.";
@@ -153,7 +154,7 @@ namespace WebDeCuong.Api.Repositories
 
             string Id = $"{await _context.Subjects.CountAsync() + 1}".PadLeft(7, '0');
 
-            await _context.Subjects.AddAsync(new Subject 
+            await _context.Subjects.AddAsync(new Subject
             {
                 Id = Id,
                 Name = subject.Name,
@@ -192,7 +193,7 @@ namespace WebDeCuong.Api.Repositories
                     Clos = output.Clos,
                     Method = output.Method,
                     NLessons = output.NLessons,
-                    Order = output.Order,       
+                    Order = output.Order,
                 });
             }
 
@@ -374,6 +375,39 @@ namespace WebDeCuong.Api.Repositories
 
             return responseModel;
 
+        }
+
+        public async Task<ResponseModel> RequestSubject(RequestSubjectModel subject)
+        {
+            var lastSubject = await _context.Subjects.OrderByDescending((s) => s.Id).ToListAsync();
+            int id = 0;
+            if (lastSubject.Count > 0)
+            {
+                id = int.Parse(lastSubject[0].Id) + 1;
+            }
+
+            Subject subjects = new Subject
+            {
+                Id = id.ToString().PadLeft(7, '0'),
+                Name = subject.Name,
+                RequestUserMail = subject.RequestUserMail,
+            };
+
+            var resModel = new ResponseModel();
+
+            await _context.Subjects.AddAsync(subjects);
+            var response = await _context.SaveChangesAsync();
+
+            if (response == 0)
+            {
+                resModel.Status = Status.Error;
+                resModel.Message = "Subject cannot request.";
+                return resModel;
+            }
+
+            resModel.Status = Status.Success;
+            resModel.Message = "Subject was requested.";
+            return resModel;
         }
     }
 }
