@@ -26,7 +26,8 @@ namespace WebDeCuong.Api.Repositories
                 SubjectGetModel subject = new SubjectGetModel
                 {
                     Id = item.Id,
-                    Name = item.Name
+                    Name = item.Name,
+                    RequestUserMail = item.RequestUserMail
                 };
 
                 result.Add(subject);

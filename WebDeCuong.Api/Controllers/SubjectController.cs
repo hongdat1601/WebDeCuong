@@ -22,11 +22,12 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpPost("Request")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> RequestSubject([FromBody] RequestSubjectModel subject)
         {
             var res = await _subjectRepository.RequestSubject(subject);
 
-            if (res.Status.CompareTo(Status.Error) != 0)
+            if (res.Status.CompareTo(Status.Error) == 0)
             {
                 return BadRequest(res.Message);
             }
