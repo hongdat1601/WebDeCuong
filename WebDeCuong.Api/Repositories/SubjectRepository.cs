@@ -27,7 +27,8 @@ namespace WebDeCuong.Api.Repositories
                 {
                     Id = item.Id,
                     Name = item.Name,
-                    RequestUserMail = item.RequestUserMail
+                    RequestUserMail = item.RequestUserMail,
+                    TotalCredits = item.TotalCredits
                 };
 
                 result.Add(subject);
