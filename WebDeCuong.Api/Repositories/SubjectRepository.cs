@@ -263,6 +263,7 @@ namespace WebDeCuong.Api.Repositories
             subjectUpdate.B = subject.B;
             subjectUpdate.C = subject.C;
             subjectUpdate.Other = subject.Other;
+            subjectUpdate.RequestUserMail = subject.RequestUserMail;
 
             // delete child
             _context.SubjectOutputStandards

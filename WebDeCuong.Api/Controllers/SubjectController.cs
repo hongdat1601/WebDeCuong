@@ -79,7 +79,6 @@ namespace WebDeCuong.Api.Controllers
         }
 
         [HttpPut()]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateSubject([FromBody] SubjectModel subject)
         {
             var result = await _subjectRepository.UpdateSubject(subject);
