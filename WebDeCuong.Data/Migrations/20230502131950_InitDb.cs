@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -8,115 +9,155 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebDeCuong.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDB : Migration
+    public partial class InitDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "Curriculums",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Curriculums", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "Semesters",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Semesters", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "Subjects",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Name = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     TheoryCredits = table.Column<int>(type: "int", nullable: false),
                     PracticeCredits = table.Column<int>(type: "int", nullable: false),
                     SelfLearningCredits = table.Column<int>(type: "int", nullable: false),
                     TotalCredits = table.Column<int>(type: "int", nullable: false),
-                    Teachers = table.Column<string>(type: "ntext", nullable: false),
-                    Documents = table.Column<string>(type: "ntext", nullable: true),
-                    Goals = table.Column<string>(type: "ntext", nullable: false),
-                    Abstract = table.Column<string>(type: "ntext", nullable: false),
-                    A = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    B = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    C = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Other = table.Column<string>(type: "ntext", nullable: true),
-                    RequestUserMail = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Teachers = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Documents = table.Column<string>(type: "text", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Goals = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Abstract = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    A = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    B = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    C = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Other = table.Column<string>(type: "text", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RequestUserMail = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Subjects", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Faculty = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Gender = table.Column<bool>(type: "bit", nullable: false),
-                    PlaceOfBirth = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FullName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Faculty = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Gender = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PlaceOfBirth = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClaimType = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClaimValue = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -127,19 +168,23 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "EvalElements",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Order = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "ntext", nullable: false),
-                    Method = table.Column<string>(type: "ntext", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Method = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Proportion = table.Column<int>(type: "int", nullable: false),
-                    SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    SubjectId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -150,21 +195,25 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "Evaluates",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Order = table.Column<int>(type: "int", nullable: false),
                     Clo = table.Column<int>(type: "int", nullable: false),
-                    Test = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Method = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Test = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Method = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Proportion = table.Column<int>(type: "int", nullable: false),
                     Target = table.Column<int>(type: "int", nullable: false),
-                    SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    SubjectId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -175,21 +224,27 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "SubjectContents",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Order = table.Column<int>(type: "int", nullable: false),
-                    Content = table.Column<string>(type: "ntext", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     NLessons = table.Column<int>(type: "int", nullable: false),
-                    Clos = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Method = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Bonus = table.Column<string>(type: "ntext", nullable: true),
-                    SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Clos = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Method = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Bonus = table.Column<string>(type: "text", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SubjectId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -200,16 +255,18 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "SubjectCurriculums",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CurriculumId = table.Column<int>(type: "int", nullable: false),
-                    SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubjectId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     SemesterId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -233,18 +290,22 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "SubjectOutputStandards",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Clo = table.Column<int>(type: "int", nullable: false),
-                    Content = table.Column<string>(type: "ntext", nullable: false),
-                    SoPerPi = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Content = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SoPerPi = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SubjectId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -255,17 +316,21 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClaimType = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ClaimValue = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -276,16 +341,21 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProviderKey = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProviderDisplayName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -296,14 +366,17 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RoleId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -320,16 +393,21 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Name = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Value = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -340,16 +418,19 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "SubjectUsers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SubjectId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SubjectId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -366,15 +447,16 @@ namespace WebDeCuong.Data.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "55ee118a-2603-443d-81fe-430c9b05e066", "55ee118a-2603-443d-81fe-430c9b05e066", "Admin", "ADMIN" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "User", "USER" }
+                    { "868f560d-7b60-4d96-a02d-deeb33ae9b2a", "868f560d-7b60-4d96-a02d-deeb33ae9b2a", "Admin", "ADMIN" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "a26cf27d-a917-47a7-91e5-ecd8f7263671", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -394,17 +476,17 @@ namespace WebDeCuong.Data.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "DateOfBirth", "Email", "EmailConfirmed", "Faculty", "FullName", "Gender", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "PlaceOfBirth", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "0a8e83dc-5ef8-4179-9493-b49862c3080c", 0, "5aa94164-6edf-406f-a98e-03c24c408b6a", new DateTime(2023, 5, 2, 15, 9, 22, 208, DateTimeKind.Local).AddTicks(648), "user7@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_7", false, false, null, "USER7@GMAIL.COM", "USER7@GMAIL.COM", "AQAAAAIAAYagAAAAELB0FJyKhS9APPv2nnXIE2r6PWK86FtUwO82RkCDnPewXTXiyayKxrF/NlrK48gT6g==", "0900000000", false, "TP.HCM", "cc88f81b-b616-47e4-a7ea-9cf1fa2e9200", false, "user7@gmail.com" },
-                    { "235fb507-c66d-465c-aaac-c5fc777e87f2", 0, "eda7adfe-cc28-4da9-b97c-8afeeb604fc4", new DateTime(2023, 5, 2, 15, 9, 21, 157, DateTimeKind.Local).AddTicks(7956), "admin@gmail.com", false, "Khoa học máy tính", "Nguyễn Văn A", true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEBH9gVHTMlkHQJ2V8qEYHcPBanoNHJ+RUJ/6uV36rCUVtz6xlxecv0UijZ1gst/Y/w==", "0900000000", false, "TP.HCM", "8d0f29ad-201b-4e2a-88cd-84db60d654aa", false, "admin@gmail.com" },
-                    { "24dd35ab-94a0-4697-bc18-bf8dc433eaf3", 0, "b9cd4e4d-14cd-4735-8b09-00c3ee4f0793", new DateTime(2023, 5, 2, 15, 9, 21, 277, DateTimeKind.Local).AddTicks(8399), "user0@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_0", false, false, null, "USER0@GMAIL.COM", "USER0@GMAIL.COM", "AQAAAAIAAYagAAAAECg78Qp9zNIq2D4AVxx1ioYXrQ8jXBF1VMYnBpgkHuiXLLZrl6HDkwjjbWOv0TCuyQ==", "0900000000", false, "TP.HCM", "7cb4cf94-5a23-470d-9f95-75a49eee22a3", false, "user0@gmail.com" },
-                    { "3bc840ce-1d87-4687-ab0d-f0d5edf5a8be", 0, "5603bb1c-3b27-4372-bc41-c7a05743ba36", new DateTime(2023, 5, 2, 15, 9, 21, 934, DateTimeKind.Local).AddTicks(6809), "user5@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_5", false, false, null, "USER5@GMAIL.COM", "USER5@GMAIL.COM", "AQAAAAIAAYagAAAAEMZjLhX+rgYT2GKo69O0TqPmMobh7OkJRrHacmZ89v85x1Tc6bFF1g4f6F/DOcgXqg==", "0900000000", false, "TP.HCM", "a5b6cd7b-0c21-4867-b094-4391d67f788e", false, "user5@gmail.com" },
-                    { "5d8b1e05-2584-48a8-be28-b8b263b31a11", 0, "4c9c3ff1-670c-4676-baf6-de2047150b11", new DateTime(2023, 5, 2, 15, 9, 22, 449, DateTimeKind.Local).AddTicks(2574), "user9@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_9", false, false, null, "USER9@GMAIL.COM", "USER9@GMAIL.COM", "AQAAAAIAAYagAAAAEI7WqwVCx6A9Esy+Ht07jWXJQ3eSAxPnQ3rOi1aZZKOBoK4+KFZ6pR/a0Xg0k+dWRQ==", "0900000000", false, "TP.HCM", "925d0ea6-4237-4e7c-901a-2b15fa0231fd", false, "user9@gmail.com" },
-                    { "6bfede16-ceca-45eb-87bf-33f735c282f0", 0, "2c601a4d-66d9-4546-a33d-f1771765b8f5", new DateTime(2023, 5, 2, 15, 9, 21, 666, DateTimeKind.Local).AddTicks(6168), "user3@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_3", false, false, null, "USER3@GMAIL.COM", "USER3@GMAIL.COM", "AQAAAAIAAYagAAAAEMVz/jrXWP22hVIFH4sMk+1RUkypi03FgSbyY3RnuXgnnEenIefi+98IKMHiya6dtw==", "0900000000", false, "TP.HCM", "7f44e434-354b-4128-baae-9321e497671f", false, "user3@gmail.com" },
-                    { "aaaa8253-3c8c-4250-ae09-04a7e565ebcd", 0, "28d61496-1e04-459a-ac00-21cedb3453c7", new DateTime(2023, 5, 2, 15, 9, 22, 333, DateTimeKind.Local).AddTicks(9660), "user8@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_8", false, false, null, "USER8@GMAIL.COM", "USER8@GMAIL.COM", "AQAAAAIAAYagAAAAEHVnU/W69vMI8QRqPyO7lVWu+bDfriyJPtj6BqKP4Gtami8isQkpombdidsZucCfFg==", "0900000000", false, "TP.HCM", "684dc97c-7460-4261-bb33-ebcc91d799d9", false, "user8@gmail.com" },
-                    { "af239852-8612-4e4c-8612-c3382d42a0d1", 0, "1e84e5c9-a0d6-4be4-83f4-3f1e332b9e8a", new DateTime(2023, 5, 2, 15, 9, 21, 543, DateTimeKind.Local).AddTicks(2245), "user2@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_2", false, false, null, "USER2@GMAIL.COM", "USER2@GMAIL.COM", "AQAAAAIAAYagAAAAEIvg8jc0DP86uZwnbN/vzVv6/zkzmxLPQ3d/R1f2wqfm3vXgi0rI3alrnPHwT9oivg==", "0900000000", false, "TP.HCM", "ffe7f24b-7ffd-4531-8223-6750a51f90fc", false, "user2@gmail.com" },
-                    { "b9b351c1-c58e-4ce8-8cdc-7bdc8e0a3bad", 0, "00006daa-1601-4cee-8d16-391d04abec0e", new DateTime(2023, 5, 2, 15, 9, 22, 79, DateTimeKind.Local).AddTicks(9149), "user6@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_6", false, false, null, "USER6@GMAIL.COM", "USER6@GMAIL.COM", "AQAAAAIAAYagAAAAECBwYH4S704W0WIvtQo1YOa9FTvDsr+w+Yk5fSLB9LX7zlnjbmvIghOBYYB8aGQ73A==", "0900000000", false, "TP.HCM", "abde66d1-578c-4008-b609-f59af7e117ac", false, "user6@gmail.com" },
-                    { "caf97252-1da9-4693-b2d8-d6fe50d74af9", 0, "f41c45b7-9efa-41ec-9cde-036504071a16", new DateTime(2023, 5, 2, 15, 9, 21, 413, DateTimeKind.Local).AddTicks(2650), "user1@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_1", false, false, null, "USER1@GMAIL.COM", "USER1@GMAIL.COM", "AQAAAAIAAYagAAAAELuovoO7KPlqDURaEOVvwQbSJKqpoEKi3cay45cKWndqP8TfHaAc7eLinj3U34wiBw==", "0900000000", false, "TP.HCM", "d13dd28e-4b17-48dc-b43e-f2f9f247532d", false, "user1@gmail.com" },
-                    { "e0bb91da-ef1a-40ea-8d32-eb200a803efd", 0, "ea3b6474-a234-4bf4-a6c5-0d7e03a0724d", new DateTime(2023, 5, 2, 15, 9, 21, 808, DateTimeKind.Local).AddTicks(2984), "user4@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_4", false, false, null, "USER4@GMAIL.COM", "USER4@GMAIL.COM", "AQAAAAIAAYagAAAAEPwWTh97pvqRO4pcunMt/Ra9uAu9AXhGwJC9GeVLdaABhQRBQIoy9tKViBLkQqzlvA==", "0900000000", false, "TP.HCM", "a864c881-ef4c-41d4-bc61-b88b7442ca97", false, "user4@gmail.com" }
+                    { "04df6fee-9b2f-44ea-8709-e42075e19065", 0, "8d7ec703-5418-4c0e-8d7f-24814e5a6c29", new DateTime(2023, 5, 2, 20, 19, 50, 600, DateTimeKind.Local).AddTicks(813), "user9@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_9", false, false, null, "USER9@GMAIL.COM", "USER9@GMAIL.COM", "AQAAAAIAAYagAAAAEIpBzyecjul/CO4Ikqfxhxk4/+UdottefBqElCDE6o9einvk/KaUv5E6VIgK+WclbA==", "0900000000", false, "TP.HCM", "87197e69-5fb8-4397-8b12-4297cc343eda", false, "user9@gmail.com" },
+                    { "17f6646b-025b-4dc7-ae89-cf4dce101242", 0, "ff03ce34-114b-4ed9-a3c7-e6da3265a524", new DateTime(2023, 5, 2, 20, 19, 50, 22, DateTimeKind.Local).AddTicks(9730), "user4@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_4", false, false, null, "USER4@GMAIL.COM", "USER4@GMAIL.COM", "AQAAAAIAAYagAAAAEEKlv3kRAhUyIWQrd5AtMKkYG/7rXsykllaZUrREaRZNzNqbl4GMB4GMq14Ds9kMlQ==", "0900000000", false, "TP.HCM", "9314edfd-96f5-46ab-876b-d1799245a04e", false, "user4@gmail.com" },
+                    { "19692afb-fbc3-40f4-8aa5-66ef2ec2e4e5", 0, "968da335-5a2c-4c25-abcb-ed7649cb9f72", new DateTime(2023, 5, 2, 20, 19, 49, 336, DateTimeKind.Local).AddTicks(7308), "admin@gmail.com", false, "Khoa học máy tính", "Nguyễn Văn A", true, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEMAEtMVhNKCkDbXDrNBUm7W5+KEMN2NkgHVDPCzcjG8bLRtfCjWB20li3uKnh/5JlQ==", "0900000000", false, "TP.HCM", "b1d85ebf-b570-4233-8ffa-1d879ac22e5e", false, "admin@gmail.com" },
+                    { "42b90d73-7449-4d93-88a3-3944db4f23cb", 0, "bd715a11-5baa-4265-8a10-8b6cac025ff4", new DateTime(2023, 5, 2, 20, 19, 50, 259, DateTimeKind.Local).AddTicks(3068), "user6@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_6", false, false, null, "USER6@GMAIL.COM", "USER6@GMAIL.COM", "AQAAAAIAAYagAAAAEKCW7J37TVHX+xJeKeHXpinYDdndUCQ0TPEqh9V1ZMzbak40VJTJJWSbe/VwyVFTHg==", "0900000000", false, "TP.HCM", "668b34f9-d083-4836-bbb9-cfbc15756f2d", false, "user6@gmail.com" },
+                    { "797f84eb-78b3-44ec-a7f3-22a647be488e", 0, "e875b709-1279-42bb-8bc6-96710873d488", new DateTime(2023, 5, 2, 20, 19, 50, 373, DateTimeKind.Local).AddTicks(8288), "user7@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_7", false, false, null, "USER7@GMAIL.COM", "USER7@GMAIL.COM", "AQAAAAIAAYagAAAAEG+17s1+szTEvmHry4ssF+mp/XaM5trbu9QOFqtRLKjQaw/URhs6YLHl6RP/u6a3Xg==", "0900000000", false, "TP.HCM", "8f1fd559-7bb1-4d9d-a626-e91c55527782", false, "user7@gmail.com" },
+                    { "7f3531fc-a18e-4680-9936-7711fc967332", 0, "0c7b077f-793d-4dfc-b26a-23c4f0c2761d", new DateTime(2023, 5, 2, 20, 19, 49, 746, DateTimeKind.Local).AddTicks(3635), "user2@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_2", false, false, null, "USER2@GMAIL.COM", "USER2@GMAIL.COM", "AQAAAAIAAYagAAAAEKWS+k72f+vRGtVX/JpiQtRbljHkKshYh3fWZSfF7ykC+jYJCJiBeb1GYM3bB45JKA==", "0900000000", false, "TP.HCM", "2624afca-e679-4bc2-828d-ba4e05a78b0e", false, "user2@gmail.com" },
+                    { "9150d4c5-a7f9-4d4d-89ff-6e79c5d7f504", 0, "ecaba934-755c-49b0-80d3-9fdc78e8e89a", new DateTime(2023, 5, 2, 20, 19, 50, 492, DateTimeKind.Local).AddTicks(6167), "user8@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_8", false, false, null, "USER8@GMAIL.COM", "USER8@GMAIL.COM", "AQAAAAIAAYagAAAAEJEAWwLl0OewzLsXq/4WzgjJqUbVb+bns70KqYY6pO5EpOig6Fk2lA+AvRRMcBU7Yg==", "0900000000", false, "TP.HCM", "1fc0e115-bfd7-46c4-80e9-1258ee3d260c", false, "user8@gmail.com" },
+                    { "a556c3ed-e39f-4c3b-8260-27e299fa5997", 0, "4ec1f7f3-8d0a-4ce4-81b5-f5a5628964c0", new DateTime(2023, 5, 2, 20, 19, 49, 883, DateTimeKind.Local).AddTicks(682), "user3@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_3", false, false, null, "USER3@GMAIL.COM", "USER3@GMAIL.COM", "AQAAAAIAAYagAAAAEAVgbZTOEt8fx6YBXwojGXKXEQOrRGIevaPkv/YqB3rg+eeZ6vjbXJxMgz3L0zO3hg==", "0900000000", false, "TP.HCM", "6b4aa49c-556d-4e06-82e4-42b8e496e129", false, "user3@gmail.com" },
+                    { "cce4fe6b-9169-466e-a364-6912b115060e", 0, "4cd4e31d-37cc-4359-9f87-6b07f6e7f54b", new DateTime(2023, 5, 2, 20, 19, 50, 147, DateTimeKind.Local).AddTicks(4242), "user5@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_5", false, false, null, "USER5@GMAIL.COM", "USER5@GMAIL.COM", "AQAAAAIAAYagAAAAEGwrYmbQTbXQiB7IxpeW1ZvzwWb1UMs+BFjge+v2TR9rPlq9zoUs/3HCuluYGfy0pA==", "0900000000", false, "TP.HCM", "bf0dd2a0-f1e2-48bb-990c-3862d3342c8d", false, "user5@gmail.com" },
+                    { "d7dec7f8-bfc1-4e09-b815-56bff951adff", 0, "94be165e-0030-41cf-b212-3ffa51c2aff2", new DateTime(2023, 5, 2, 20, 19, 49, 450, DateTimeKind.Local).AddTicks(2060), "user0@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_0", false, false, null, "USER0@GMAIL.COM", "USER0@GMAIL.COM", "AQAAAAIAAYagAAAAECEsOggQYCKLp6ITPVZ3zh1mvrqHCZaTf3DoM1QTELFzvsArkHdSHQLkG8nfybdviQ==", "0900000000", false, "TP.HCM", "40c366ef-f630-4d19-88a9-10e9ec9cd0ad", false, "user0@gmail.com" },
+                    { "f4e30aff-2a35-4c10-8266-19627406b95a", 0, "53b04fe9-0125-43d2-83c4-283080de543c", new DateTime(2023, 5, 2, 20, 19, 49, 591, DateTimeKind.Local).AddTicks(3286), "user1@gmail.com", false, "Công nghệ thông tin", "Nguyễn Thị B_1", false, false, null, "USER1@GMAIL.COM", "USER1@GMAIL.COM", "AQAAAAIAAYagAAAAELe+Vf0pIBI1mqdyPNmBn6gc6glPowspffo2BS5hi3MCsMtAfhsBKgaYEKpfTa+0FA==", "0900000000", false, "TP.HCM", "328bb24b-d677-4a34-8441-311b8e5dd5be", false, "user1@gmail.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -412,17 +494,17 @@ namespace WebDeCuong.Data.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "0a8e83dc-5ef8-4179-9493-b49862c3080c" },
-                    { "55ee118a-2603-443d-81fe-430c9b05e066", "235fb507-c66d-465c-aaac-c5fc777e87f2" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "24dd35ab-94a0-4697-bc18-bf8dc433eaf3" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "3bc840ce-1d87-4687-ab0d-f0d5edf5a8be" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "5d8b1e05-2584-48a8-be28-b8b263b31a11" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "6bfede16-ceca-45eb-87bf-33f735c282f0" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "aaaa8253-3c8c-4250-ae09-04a7e565ebcd" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "af239852-8612-4e4c-8612-c3382d42a0d1" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "b9b351c1-c58e-4ce8-8cdc-7bdc8e0a3bad" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "caf97252-1da9-4693-b2d8-d6fe50d74af9" },
-                    { "cd9bbb33-3eb6-477c-b87c-80f92896c33c", "e0bb91da-ef1a-40ea-8d32-eb200a803efd" }
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "04df6fee-9b2f-44ea-8709-e42075e19065" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "17f6646b-025b-4dc7-ae89-cf4dce101242" },
+                    { "868f560d-7b60-4d96-a02d-deeb33ae9b2a", "19692afb-fbc3-40f4-8aa5-66ef2ec2e4e5" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "42b90d73-7449-4d93-88a3-3944db4f23cb" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "797f84eb-78b3-44ec-a7f3-22a647be488e" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "7f3531fc-a18e-4680-9936-7711fc967332" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "9150d4c5-a7f9-4d4d-89ff-6e79c5d7f504" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "a556c3ed-e39f-4c3b-8260-27e299fa5997" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "cce4fe6b-9169-466e-a364-6912b115060e" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "d7dec7f8-bfc1-4e09-b815-56bff951adff" },
+                    { "a26cf27d-a917-47a7-91e5-ecd8f7263671", "f4e30aff-2a35-4c10-8266-19627406b95a" }
                 });
 
             migrationBuilder.InsertData(
@@ -562,8 +644,7 @@ namespace WebDeCuong.Data.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -640,8 +721,7 @@ namespace WebDeCuong.Data.Migrations
                 name: "UserNameIndex",
                 table: "Users",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
         }
 
         /// <inheritdoc />

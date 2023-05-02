@@ -17,7 +17,7 @@ namespace WebDeCuong.Data.Entities
         public int Clo { get; set; }
 
         [Required]
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "text")]
         public string Content { get; set; } = string.Empty;
 
         [Required]

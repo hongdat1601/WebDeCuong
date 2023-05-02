@@ -18,11 +18,11 @@ namespace WebDeCuong.Data.Entities
         public int Order { get; set; }
 
         [Required]
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "text")]
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "text")]
         public string Method { get; set; } = string.Empty;
 
         [Required]

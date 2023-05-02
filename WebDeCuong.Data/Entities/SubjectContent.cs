@@ -18,7 +18,7 @@ namespace WebDeCuong.Data.Entities
         public int Order { get; set; }
 
         [Required]
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "text")]
         public string Content { get; set; } = string.Empty;
 
         [Required]
@@ -30,7 +30,7 @@ namespace WebDeCuong.Data.Entities
         [Required]
         public string Method { get; set; } = string.Empty;
 
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "text")]
         public string? Bonus { get; set; }
 
         [Required]
