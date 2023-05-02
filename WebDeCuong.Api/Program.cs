@@ -54,8 +54,10 @@ builder.Services.AddCors(options =>
 });
 
 // Add EF Core DbContext
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 32));
+var connectionString = builder.Configuration.GetConnectionString("mysql");
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("test")));
+    options => options.UseMySql(connectionString, serverVersion));
 
 // Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
