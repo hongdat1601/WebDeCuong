@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ namespace WebDeCuong.Data.Entities
         public int Order { get; set; }
 
         [Required]
+        [Column(TypeName = "ntext")]
         public string Content { get; set; } = string.Empty;
 
         [Required]
@@ -27,6 +30,7 @@ namespace WebDeCuong.Data.Entities
         [Required]
         public string Method { get; set; } = string.Empty;
 
+        [Column(TypeName = "ntext")]
         public string? Bonus { get; set; }
 
         [Required]

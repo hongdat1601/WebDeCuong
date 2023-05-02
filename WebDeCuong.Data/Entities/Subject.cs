@@ -28,18 +28,19 @@ namespace WebDeCuong.Data.Entities
         [Required]
         public int TotalCredits { get; set; }
 
-        [Column(TypeName = "text")]
+        [Required]
+        [Column(TypeName = "ntext")]
         public string Teachers { get; set; } = string.Empty;
 
-        [Column(TypeName = "text")]
+        [Column(TypeName = "ntext")]
         public string? Documents { get; set; }
 
         [Required]
-        [Column(TypeName = "text")]
+        [Column(TypeName = "ntext")]
         public string Goals { get; set; } = string.Empty;
 
         [Required]
-        [Column(TypeName = "text")]
+        [Column(TypeName = "ntext")]
         public string Abstract { get; set; } = string.Empty;
 
 
@@ -47,7 +48,7 @@ namespace WebDeCuong.Data.Entities
         public string? B { get; set; }
         public string? C { get; set; }
 
-        [Column(TypeName = "text")]
+        [Column(TypeName = "ntext")]
         public string? Other { get; set; }
 
         public string? RequestUserMail { get; set; }
