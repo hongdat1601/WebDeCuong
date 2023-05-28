@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebDeCuong.Api", "WebDeCuong.Api\WebDeCuong.Api.csproj", "{94FE4589-905C-4914-A743-B58BC1165F02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDeCuong.Data", "WebDeCuong.Data\WebDeCuong.Data.csproj", "{B1C25F55-541F-43F7-886C-00A9C5C681E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebDeCuong.Data", "WebDeCuong.Data\WebDeCuong.Data.csproj", "{B1C25F55-541F-43F7-886C-00A9C5C681E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

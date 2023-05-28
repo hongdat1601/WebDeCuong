@@ -55,7 +55,7 @@ builder.Services.AddCors(options =>
 
 // Add EF Core DbContext
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 32));
-var connectionString = builder.Configuration.GetConnectionString("mysql");
+var connectionString = builder.Configuration.GetConnectionString("test");
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseMySql(connectionString, serverVersion));
 
@@ -96,12 +96,12 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
 app.UseCors("test");
 app.UseHttpsRedirection();
